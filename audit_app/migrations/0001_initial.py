@@ -8,6 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
     ]
+    # TODO add arches version dependency
 
     forward = """
         INSERT INTO plugins (
