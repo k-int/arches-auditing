@@ -33,14 +33,12 @@
     onMounted(loadEditLog);
     
     async function loadEditLog() {
-        console.log("LOAD!!!!")
 
         isLoading.value = true;
 
         try {
             const responseData = await fetchResourceEditLog();
                 edits.value = responseData.edits;
-            console.log("EDITS", edits)
 
         } catch (caughtError) {
             console.log("Unable to fetch edit history: ", caughtError)
