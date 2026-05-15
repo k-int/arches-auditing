@@ -62,16 +62,21 @@
 </script>
 
 <template>
-    <p>Hello world</p>    
 
-    <div class="card">
+    <div class="edit-log-component">
         <DataTable 
-            :value="edits" 
-            :loading="isLoading" responsiveLayout="scroll"
+            responsiveLayout="scroll"
+            size="large"
             striped-rows
+            removableSort
+            :value="edits" 
+            :loading="isLoading" 
+            :paginator="true" 
+            :rows="5"
+            class="edit-log-table"
             >
             
-            <Column header="Resource ID">
+            <Column field="resourceinstanceid" header="Resource ID" sortable>
                 <template #body="slotProps">
                     <a :href="'/resource/' + slotProps.data.resourceinstanceid" target="_blank" class="resource-link">
                         {{ slotProps.data.resourceinstanceid }}
@@ -79,26 +84,36 @@
                 </template>
             </Column>
 
-            <Column field="resource_name" header="Resource Name"></Column>
+            <Column field="resource_name" header="Resource Name" sortable></Column>
 
-            <Column field="graph_name" header="Resource Model"></Column>
+            <Column field="graph_name" header="Resource Model" sortable></Column>
 
-            <Column header="Date">
+            <Column field="timestamp" header="Date" sortable>
                 <template #body="slotProps">
                     {{ formatTimestamp(slotProps.data.timestamp) }}
                 </template>
             </Column>
 
-            <Column field="user_username" header="User"></Column>
+            <Column field="user_username" header="User" sortable></Column>
 
-            <Column header="Action">
+            <Column field="edittype_label" header="Action" sortable>
                 <template #body="slotProps">
                     {{ formatLabel(slotProps.data.edittype_label) }}
                 </template>
             </Column>
 
-            <Column field="card_name" header="Card"></Column>
+            <Column field="card_name" header="Card" sortable></Column>
 
         </DataTable>
     </div>
 </template>
+
+<style scoped>
+    .edit-log-component {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        width: 100vw;
+    }
+</style>
