@@ -48,6 +48,7 @@ class ResourceEditLogAPIView(View):
 
             resource_instance = resource_lookup.get(edit.resourceinstanceid)
             graph_name = resource_instance.graph.name
+            resource_name = resource_instance.name
 
             nodegroup_id = edit.nodegroupid
 
@@ -68,6 +69,7 @@ class ResourceEditLogAPIView(View):
                     {
                         "editlogid": str(edit.editlogid),
                         "resourceinstanceid": str(edit.resourceinstanceid),
+                        "resourceName": str(resource_name),
                         "graph_name": graph_name,
                         "transactionid": (
                             str(edit.transactionid) if edit.transactionid else None
