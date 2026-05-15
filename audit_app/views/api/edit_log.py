@@ -70,7 +70,7 @@ class ResourceEditLogAPIView(View):
                     {
                         "editlogid": str(edit.editlogid),
                         "resourceinstanceid": str(edit.resourceinstanceid),
-                        "resourceName": str(resource_name),
+                        "resource_name": str(resource_name),
                         "graph_name": graph_name,
                         "transactionid": (
                             str(edit.transactionid) if edit.transactionid else None

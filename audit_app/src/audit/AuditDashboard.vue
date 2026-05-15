@@ -79,7 +79,9 @@
                 </template>
             </Column>
 
-            <Column field="resourceName" header="Resource Name"></Column>
+            <Column field="resource_name" header="Resource Name"></Column>
+
+            <Column field="graph_name" header="Resource Model"></Column>
 
             <Column header="Date">
                 <template #body="slotProps">
