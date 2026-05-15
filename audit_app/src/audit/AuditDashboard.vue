@@ -2,6 +2,8 @@
     import { computed, inject, onMounted, ref } from "vue";
     import { useGettext } from "vue3-gettext";
     import { useToast } from "primevue/usetoast";
+    import DataTable from 'primevue/datatable';
+    import Column from 'primevue/column';
 
     import {
         fetchResourceEditLog,
@@ -23,6 +25,11 @@
         SUCCESS,
     } from "@/audit/constants.ts";
 
+    const dateTimeFormatter = new Intl.DateTimeFormat(undefined, {
+        dateStyle: "medium",
+        timeStyle: "medium",
+    });
+
     onMounted(loadEditLog);
     
     async function loadEditLog() {
@@ -42,10 +49,51 @@
             isLoading.value = false;
         }
     
-        }
+    }
+
+    const formatLabel = (label: any) => {
+        return $gettext(label._proxy____args[0]);
+    };
+
+    const formatTimestamp = (timestamp: string) => {
+        return dateTimeFormatter.format(new Date(timestamp));
+    }
 
 </script>
 
 <template>
     <p>Hello world</p>    
+
+    <div class="card">
+        <DataTable 
+            :value="edits" 
+            :loading="isLoading" responsiveLayout="scroll"
+            striped-rows
+            >
+            
+            <Column header="Resource ID">
+                <template #body="slotProps">
+                    <a :href="'/resource/' + slotProps.data.resourceinstanceid" target="_blank" class="resource-link">
+                        {{ slotProps.data.resourceinstanceid }}
+                    </a>
+                </template>
+            </Column>
+
+            <Column field="resourceName" header="Resource Name"></Column>
+
+            <Column header="Date">
+                <template #body="slotProps">
+                    {{ formatTimestamp(slotProps.data.timestamp) }}
+                </template>
+            </Column>
+
+            <Column field="user_username" header="User"></Column>
+
+            <Column header="Action">
+                <template #body="slotProps">
+                    {{ formatLabel(slotProps.data.edittype_label) }}
+                </template>
+            </Column>
+        </DataTable>
+    </div>
 </template>
