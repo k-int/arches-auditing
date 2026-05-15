@@ -96,6 +96,9 @@
                     {{ formatLabel(slotProps.data.edittype_label) }}
                 </template>
             </Column>
+
+            <Column field="card_name" header="Card"></Column>
+
         </DataTable>
     </div>
 </template>
