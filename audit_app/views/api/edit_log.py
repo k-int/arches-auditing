@@ -29,10 +29,10 @@ class ResourceEditLogAPIView(View):
         ))
 
         # get all edited resources
-        edit_ids = list({edit.resourceinstanceid for edit in filtered_edits})
+        edited_resources_ids = list({edit.resourceinstanceid for edit in filtered_edits})
         
         edited_resources = Resource.objects.filter(
-            resourceinstanceid__in=edit_ids
+            resourceinstanceid__in=edited_resources_ids
         ).distinct().select_related("graph")
 
         resource_lookup = {str(resource.pk): resource for resource in edited_resources}
