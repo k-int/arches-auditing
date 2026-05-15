@@ -44,6 +44,8 @@ class ResourceEditLogAPIView(View):
         for card in all_cards:
             graph_card_map[str(card.nodegroup_id)] = card.name
 
+        permitted_edits = []
+
         for edit in filtered_edits:
 
             resource_instance = resource_lookup.get(edit.resourceinstanceid)
@@ -58,7 +60,6 @@ class ResourceEditLogAPIView(View):
                 pk__in=[uuid.UUID(edit.nodegroupid) for edit in filtered_edits if edit.nodegroupid]
             ).in_bulk()
 
-            permitted_edits = []
             for edit in filtered_edits:
                 if edit.nodegroupid:
                     nodegroup = nodegroups_by_id.get(uuid.UUID(edit.nodegroupid))
@@ -88,4 +89,4 @@ class ResourceEditLogAPIView(View):
                         "note": edit.note,
                     })
             
-            return JSONResponse({"edits": permitted_edits})
+        return JSONResponse({"edits": permitted_edits})
