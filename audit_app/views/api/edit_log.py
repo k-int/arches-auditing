@@ -42,9 +42,14 @@ class ResourceEditLogAPIView(View):
             resourceinstanceid=Cast(OuterRef('resourceinstanceid'), UUIDField())
         ).values('name')[:1]
 
+        card_name_subquery = Card.objects.filter(
+            nodegroup_id=Cast(OuterRef('nodegroupid'), UUIDField())
+        ).values('name')[:1]
+
         filtered_edits = filtered_edits.annotate(
             graph_name=Subquery(graph_name_subquery),
-            resource_name=Subquery(resource_name_subquery)
+            resource_name=Subquery(resource_name_subquery),
+            card_name=Subquery(card_name_subquery)
         )
 
         ALLOWED_SORT_FIELDS = ['resourceinstanceid', 'resource_name', 'graph_name', 'timestamp', 'user_username', 'edittype', 'card_name']
@@ -58,12 +63,8 @@ class ResourceEditLogAPIView(View):
         else:
             filtered_edits = filtered_edits.order_by('-timestamp')
 
-        graph_ids = list({edit.resourceclassid for edit in filtered_edits})
-        all_cards = Card.objects.filter(graph_id__in=graph_ids)
-
-        graph_card_map = {}
-        for card in all_cards:
-            graph_card_map[str(card.nodegroup_id)] = card.name
+        for edit in filtered_edits:
+            print(type(edit.card_name))
 
         permitted_edits = []
 
@@ -73,10 +74,6 @@ class ResourceEditLogAPIView(View):
         ).in_bulk()
 
         for edit in filtered_edits:
-
-            nodegroup_id = edit.nodegroupid
-
-            card_name = graph_card_map.get(str(nodegroup_id), _("Unknown Card"))
 
             if edit.nodegroupid:
                 nodegroup = nodegroups_by_id.get(uuid.UUID(edit.nodegroupid))
@@ -102,7 +99,7 @@ class ResourceEditLogAPIView(View):
                     "user_email": edit.user_email,
                     "nodegroupid": edit.nodegroupid,
                     "tileinstanceid": edit.tileinstanceid,
-                    "card_name": card_name,
+                    "card_name": edit.card_name,
                     "note": edit.note,
                 })
             
