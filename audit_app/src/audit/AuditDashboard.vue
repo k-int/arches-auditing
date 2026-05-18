@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { computed, inject, onMounted, ref } from "vue";
+    import { onSort, onMounted, ref } from "vue";
     import { useGettext } from "vue3-gettext";
     import { useToast } from "primevue/usetoast";
     import DataTable from 'primevue/datatable';
