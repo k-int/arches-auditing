@@ -6,14 +6,14 @@ import type {
 
 export const fetchResourceEditLog = async (
     params?: FetchEditLogParams
-): Promise<EditLogEntry[]> => {
+): Promise<{ edits: EditLogEntry[], total_count: number}> => {
 
     let url = "/api/audit/edit-log"
     // const url = generateArchesURL("audit_app:api-audit-edit-log", {
     //     resourceid: resourceId,
     // });
 
-    const queryString = new URLSearchParams(params).toString();;   
+    const queryString = new URLSearchParams(params).toString();
 
     if (queryString) {
             url += `?${queryString}`;

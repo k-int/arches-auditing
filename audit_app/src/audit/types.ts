@@ -16,6 +16,8 @@ export interface EditLogEntry {
 }
 
 export interface FetchEditLogParams {
+    offset: number;
+    limit: number;
     sortField: string | null;
     sortOrder: 'asc' | 'desc' | null;
 }

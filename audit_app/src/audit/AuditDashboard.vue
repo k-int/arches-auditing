@@ -2,7 +2,7 @@
     import { onMounted, ref } from "vue";
     import { useGettext } from "vue3-gettext";
     import { useToast } from "primevue/usetoast";
-    import DataTable from 'primevue/datatable';
+    import DataTable, { type DataTableStateEvent } from 'primevue/datatable';
     import Column from 'primevue/column';
 
     import {
@@ -16,6 +16,9 @@
 
     const sortField = ref<string | null>('timestamp');
     const sortOrder = ref<number | null>(-1);
+    const first = ref(0);
+    const rows = ref(5); 
+    const totalRecords = ref(0);
 
     const toast = useToast();
     const { $gettext } = useGettext();
@@ -42,11 +45,14 @@
         try {
             const responseData = await fetchResourceEditLog(
                 {
+                    offset: first.value,
+                    limit: rows.value,
                     sortField: sortField.value,
                     sortOrder: sortOrder.value === 1 ? 'asc' : sortOrder.value === -1 ? 'desc' : null
                 }
             );
             edits.value = responseData.edits;
+            totalRecords.value = responseData.total_count;
 
         } catch (caughtError) {
             console.log("Unable to fetch edit history: ", caughtError)
@@ -61,7 +67,7 @@
         return dateTimeFormatter.format(new Date(timestamp));
     }
 
-    const onSort = (event: any) => {
+    const onChange = (event: DataTableStateEvent) => {
         if (event.sortField === "edittype_label") {
             sortField.value = "edittype";
         }
@@ -70,6 +76,8 @@
         }
         
         sortOrder.value = event.sortOrder;
+        first.value = event.first;
+        rows.value = event.rows;
 
         loadEditLog();
     }
@@ -88,8 +96,11 @@
             :value="edits" 
             :loading="isLoading" 
             :paginator="true" 
-            :rows="5"
-            @sort="onSort"
+            :rows="rows"
+            :first="first"
+            :totalRecords="totalRecords"
+            @sort="onChange"
+            @page="onChange"
             class="edit-log-table"
             >
             
