@@ -9,10 +9,13 @@
         fetchResourceEditLog,
     } from "@/audit/api.ts";
 
-    import type { EditLogEntry } from "@/audit/types.ts";
+    import type { EditLogEntry, FetchEditLogParams } from "@/audit/types.ts";
 
     const isLoading = ref(true);
     const edits = ref([] as EditLogEntry[]);
+
+    const sortField = ref<string | null>('timestamp');
+    const sortOrder = ref<number | null>(-1);
 
     const toast = useToast();
     const { $gettext } = useGettext();
@@ -37,8 +40,13 @@
         isLoading.value = true;
 
         try {
-            const responseData = await fetchResourceEditLog();
-                edits.value = responseData.edits;
+            const responseData = await fetchResourceEditLog(
+                {
+                    sortField: sortField.value,
+                    sortOrder: sortOrder.value === 1 ? 'asc' : sortOrder.value === -1 ? 'desc' : null
+                }
+            );
+            edits.value = responseData.edits;
 
         } catch (caughtError) {
             console.log("Unable to fetch edit history: ", caughtError)
@@ -53,12 +61,26 @@
         return dateTimeFormatter.format(new Date(timestamp));
     }
 
+    const onSort = (event: any) => {
+        if (event.sortField === "edittype_label") {
+            sortField.value = "edittype";
+        }
+        else {
+            sortField.value = event.sortField;
+        }
+        
+        sortOrder.value = event.sortOrder;
+
+        loadEditLog();
+    }
+
 </script>
 
 <template>
 
     <div class="edit-log-component">
         <DataTable 
+            lazy
             responsiveLayout="scroll"
             size="large"
             striped-rows
@@ -67,6 +89,7 @@
             :loading="isLoading" 
             :paginator="true" 
             :rows="5"
+            @sort="onSort"
             class="edit-log-table"
             >
             

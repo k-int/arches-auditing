@@ -7,7 +7,10 @@ from django.views.generic import View
 from arches.app.models import models
 from arches.app.models.card import Card
 from arches.app.models.resource import Resource
+from arches.app.models.graph import Graph
 from arches.app.models.system_settings import settings
+from django.db.models import Subquery, OuterRef, UUIDField
+from django.db.models.functions import Cast
 from arches.app.utils.response import JSONErrorResponse, JSONResponse
 
 from audit_app.const import EDIT_TYPE_LABELS
@@ -23,21 +26,39 @@ class ResourceEditLogAPIView(View):
                 status=403,
             )
         
-        # get all edits
-        filtered_edits = (models.EditLog.objects.exclude(
-            resourceclassid=settings.SYSTEM_SETTINGS_RESOURCE_MODEL_ID
-        ))
-
-        # get all edited resources
-        edited_resources_ids = list({edit.resourceinstanceid for edit in filtered_edits})
+        sort_field = request.GET.get('sortField')
+        sort_order = request.GET.get('sortOrder')
         
-        edited_resources = Resource.objects.filter(
-            resourceinstanceid__in=edited_resources_ids
-        ).distinct().select_related("graph")
+        data_edits = models.EditLog.objects.exclude(
+            resourceclassid=settings.SYSTEM_SETTINGS_RESOURCE_MODEL_ID
+        )
+        filtered_edits = data_edits.filter()
 
-        resource_lookup = {str(resource.pk): resource for resource in edited_resources}
+        graph_name_subquery = Graph.objects.filter(
+            graphid=Cast(OuterRef('resourceclassid'), UUIDField())
+        ).values('name')[:1]
 
-        graph_ids = {resource.graph_id for resource in edited_resources}
+        resource_name_subquery = Resource.objects.filter(
+            resourceinstanceid=Cast(OuterRef('resourceinstanceid'), UUIDField())
+        ).values('name')[:1]
+
+        filtered_edits = filtered_edits.annotate(
+            graph_name=Subquery(graph_name_subquery),
+            resource_name=Subquery(resource_name_subquery)
+        )
+
+        ALLOWED_SORT_FIELDS = ['resourceinstanceid', 'resource_name', 'graph_name', 'timestamp', 'user_username', 'edittype', 'card_name']
+
+        if sort_field in ALLOWED_SORT_FIELDS:
+
+            if sort_order == 'desc':
+                sort_field = f"-{sort_field}"
+
+            filtered_edits = filtered_edits.order_by(sort_field)
+        else:
+            filtered_edits = filtered_edits.order_by('-timestamp')
+
+        graph_ids = list({edit.resourceclassid for edit in filtered_edits})
         all_cards = Card.objects.filter(graph_id__in=graph_ids)
 
         graph_card_map = {}
@@ -53,10 +74,6 @@ class ResourceEditLogAPIView(View):
 
         for edit in filtered_edits:
 
-            resource_instance = resource_lookup.get(edit.resourceinstanceid)
-            graph_name = resource_instance.graph.name
-            resource_name = resource_instance.name
-
             nodegroup_id = edit.nodegroupid
 
             card_name = graph_card_map.get(str(nodegroup_id), _("Unknown Card"))
@@ -70,8 +87,8 @@ class ResourceEditLogAPIView(View):
                 {
                     "editlogid": str(edit.editlogid),
                     "resourceinstanceid": str(edit.resourceinstanceid),
-                    "resource_name": str(resource_name),
-                    "graph_name": graph_name,
+                    "resource_name": edit.resource_name,
+                    "graph_name": edit.graph_name,
                     "transactionid": (
                         str(edit.transactionid) if edit.transactionid else None
                     ),

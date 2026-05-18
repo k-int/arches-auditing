@@ -15,6 +15,11 @@ export interface EditLogEntry {
     note: string | null;
 }
 
+export interface FetchEditLogParams {
+    sortField: string | null;
+    sortOrder: 'asc' | 'desc' | null;
+}
+
 import type { EDIT, VIEW } from "@/audit/constants.ts";
 
 export type DataComponentMode = typeof EDIT | typeof VIEW;
