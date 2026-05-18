@@ -76,7 +76,7 @@ class ResourceEditLogAPIView(View):
                         str(edit.transactionid) if edit.transactionid else None
                     ),
                     "edittype": edit.edittype,
-                    "edittype_label": EDIT_TYPE_LABELS.get(edit.edittype, edit.edittype),
+                    "edittype_label": str(EDIT_TYPE_LABELS.get(edit.edittype, edit.edittype)),
                     "timestamp": edit.timestamp.isoformat() if edit.timestamp else None,
                     "userid": edit.userid,
                     "user_firstname": edit.user_firstname,

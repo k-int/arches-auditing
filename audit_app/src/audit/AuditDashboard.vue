@@ -49,10 +49,6 @@
     
     }
 
-    const formatLabel = (label: any) => {
-        return $gettext(label._proxy____args[0]);
-    };
-
     const formatTimestamp = (timestamp: string) => {
         return dateTimeFormatter.format(new Date(timestamp));
     }
@@ -94,11 +90,7 @@
 
             <Column field="user_username" header="User" sortable></Column>
 
-            <Column field="edittype_label" header="Action" sortable>
-                <template #body="slotProps">
-                    {{ formatLabel(slotProps.data.edittype_label) }}
-                </template>
-            </Column>
+            <Column field="edittype_label" header="Action" sortable></Column>
 
             <Column field="card_name" header="Card" sortable></Column>
 
