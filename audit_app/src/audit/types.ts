@@ -20,6 +20,7 @@ export interface FetchEditLogParams {
     limit: number;
     sortField: string | null;
     sortOrder: 'asc' | 'desc' | null;
+    searchUser?: string | null;
 }
 
 import type { EDIT, VIEW } from "@/audit/constants.ts";

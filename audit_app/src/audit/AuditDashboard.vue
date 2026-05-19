@@ -4,6 +4,7 @@
     import { useToast } from "primevue/usetoast";
     import DataTable, { type DataTableStateEvent } from 'primevue/datatable';
     import Column from 'primevue/column';
+    import InputText from 'primevue/inputtext';
 
     import {
         fetchResourceEditLog,
@@ -19,6 +20,10 @@
     const first = ref(0);
     const rows = ref(5); 
     const totalRecords = ref(0);
+
+    const filters = ref({
+        user_username: { value: null },
+    });
 
     const toast = useToast();
     const { $gettext } = useGettext();
@@ -48,7 +53,8 @@
                     offset: first.value,
                     limit: rows.value,
                     sortField: sortField.value,
-                    sortOrder: sortOrder.value === 1 ? 'asc' : sortOrder.value === -1 ? 'desc' : null
+                    sortOrder: sortOrder.value === 1 ? 'asc' : sortOrder.value === -1 ? 'desc' : null,
+                    searchUser: filters.value.user_username.value
                 }
             );
             edits.value = responseData.edits;
@@ -79,6 +85,8 @@
         first.value = event.first;
         rows.value = event.rows;
 
+        filters.value = event.filters as any; // TODO add interface
+
         loadEditLog();
     }
 
@@ -89,6 +97,8 @@
     <div class="edit-log-component">
         <DataTable 
             lazy
+            filterDisplay="row"
+            v-model:filters="filters"
             responsiveLayout="scroll"
             size="large"
             striped-rows
@@ -101,6 +111,7 @@
             :totalRecords="totalRecords"
             @sort="onChange"
             @page="onChange"
+            @filter="onChange"
             class="edit-log-table"
             >
             
@@ -122,7 +133,17 @@
                 </template>
             </Column>
 
-            <Column field="user_username" header="User" sortable></Column>
+            <Column field="user_username" header="User" sortable filter>
+                <template #filter="{ filterModel, filterCallback }">
+                    <InputText 
+                        v-model="filterModel.value" 
+                        type="text" 
+                        @input="filterCallback()" 
+                        class="p-column-filter" 
+                        placeholder="Search User..." 
+                    />
+                </template>
+            </Column>
 
             <Column field="edittype_label" header="Action" sortable></Column>
 

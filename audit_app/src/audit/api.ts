@@ -13,11 +13,19 @@ export const fetchResourceEditLog = async (
     //     resourceid: resourceId,
     // });
 
-    const queryString = new URLSearchParams(params).toString();
+    if(params) {
+        const activeParams = {} as Partial<FetchEditLogParams>;
 
-    if (queryString) {
-            url += `?${queryString}`;
+        for (const [key, value] of Object.entries(params)) {
+            if (value !== null && value !== undefined && value !== "") {
+                activeParams[key] = value;
+            }
         }
+
+        const queryString = new URLSearchParams(activeParams).toString();
+    
+        if (queryString) url += `?${queryString}`;
+    }
 
     const response = await fetch(url);
     const parsed = await response.json();

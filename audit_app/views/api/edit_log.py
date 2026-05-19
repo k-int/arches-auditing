@@ -37,6 +37,7 @@ class ResourceEditLogAPIView(View):
 
         sort_field = request.GET.get('sortField')
         sort_order = request.GET.get('sortOrder')
+        search_user = request.GET.get('searchUser')
 
         ## get all edits 
         
@@ -58,7 +59,7 @@ class ResourceEditLogAPIView(View):
             nodegroup_id=Cast(OuterRef('nodegroupid'), UUIDField())
         ).values('name')[:1]
 
-        filtered_edits = data_edits.annotate(
+        annotated_edits = data_edits.annotate(
             graph_name=Subquery(graph_name_subquery),
             resource_name=Subquery(resource_name_subquery),
             card_name=Subquery(card_name_subquery)
@@ -71,9 +72,16 @@ class ResourceEditLogAPIView(View):
             if sort_order == 'desc':
                 sort_field = f"-{sort_field}"
 
-            filtered_edits = filtered_edits.order_by(sort_field)
+            sorted_edits = annotated_edits.order_by(sort_field)
         else:
-            filtered_edits = filtered_edits.order_by('-timestamp')
+            sorted_edits = annotated_edits.order_by('-timestamp')
+
+        ## filtering
+
+        if search_user:
+            filtered_edits = sorted_edits.filter(user_username__icontains=search_user)
+        else:
+            filtered_edits = sorted_edits
 
         ## check node permissions
 
