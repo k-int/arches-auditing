@@ -10,7 +10,7 @@
         fetchResourceEditLog,
     } from "@/audit/api.ts";
 
-    import type { EditLogEntry, FetchEditLogParams } from "@/audit/types.ts";
+    import type { EditLogEntry, Filters } from "@/audit/types.ts";
 
     const isLoading = ref(true);
     const edits = ref([] as EditLogEntry[]);
@@ -66,7 +66,6 @@
         } finally {
             isLoading.value = false;
         }
-    
     }
 
     const formatTimestamp = (timestamp: string) => {
@@ -85,7 +84,7 @@
         first.value = event.first;
         rows.value = event.rows;
 
-        filters.value = event.filters as any; // TODO add interface
+        filters.value = event.filters as Filters;
 
         loadEditLog();
     }

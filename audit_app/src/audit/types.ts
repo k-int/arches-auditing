@@ -23,6 +23,10 @@ export interface FetchEditLogParams {
     searchUser?: string | null;
 }
 
+export interface Filters {
+    user_username: string | null;
+}
+
 import type { EDIT, VIEW } from "@/audit/constants.ts";
 
 export type DataComponentMode = typeof EDIT | typeof VIEW;
