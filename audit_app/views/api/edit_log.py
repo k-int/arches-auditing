@@ -37,9 +37,12 @@ class ResourceEditLogAPIView(View):
 
         sort_field = request.GET.get('sortField')
         sort_order = request.GET.get('sortOrder')
-        search_user = request.GET.get('userFilter')
+        user_filter = request.GET.get('userFilter')
+        resource_name_filter = request.GET.get('resourceNameFilter')
+        graph_name_filter = request.GET.get('graphNameFilter')
         action_filter = request.GET.get('actionFilter')
         resource_id_filter = request.GET.get('resourceidFilter')
+        card_name_filter = request.GET.get('cardNameFilter')
 
         ## get all edits 
         
@@ -82,14 +85,23 @@ class ResourceEditLogAPIView(View):
 
         filtered_edits = sorted_edits
 
-        if search_user:
-            filtered_edits = filtered_edits.filter(user_username__icontains=search_user)
+        if user_filter:
+            filtered_edits = filtered_edits.filter(user_username__icontains=user_filter)
+
+        if resource_name_filter:
+            filtered_edits = filtered_edits.filter(resource_name__icontains=resource_name_filter)
+
+        if graph_name_filter:
+            filtered_edits = filtered_edits.filter(graph_name__icontains=graph_name_filter)
 
         if action_filter:
             filtered_edits = filtered_edits.filter(edittype=action_filter)
 
         if resource_id_filter:
             filtered_edits = filtered_edits.filter(resourceinstanceid__icontains=resource_id_filter)
+
+        if card_name_filter:
+            filtered_edits = filtered_edits.filter(card_name__icontains=card_name_filter)
 
         ## check node permissions
 

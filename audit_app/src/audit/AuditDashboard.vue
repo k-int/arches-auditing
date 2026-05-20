@@ -23,9 +23,12 @@
     const totalRecords = ref(0);
 
     const filters = ref<Filters>({
+        resourceinstanceid: {value: null},
+        resource_name: {value: null},
+        graph_name: {value: null},
         user_username: { value: null },
         edittype_label: { value: null },
-        resourceinstanceid: {value: null}
+        card_name: { value: null }
     });
 
     const actionOptions = ref([
@@ -68,7 +71,10 @@
                     sortOrder: sortOrder.value === 1 ? 'asc' : sortOrder.value === -1 ? 'desc' : null,
                     userFilter: filters.value.user_username.value,
                     actionFilter: filters.value.edittype_label.value,
-                    resourceidFilter: filters.value.resourceinstanceid.value
+                    resourceidFilter: filters.value.resourceinstanceid.value,
+                    resourceNameFilter: filters.value.resource_name.value,
+                    graphNameFilter: filters.value.graph_name.value,
+                    cardNameFilter: filters.value.card_name.value
                 }
             );
             edits.value = responseData.edits;
@@ -146,9 +152,29 @@
                 </template>
             </Column>
 
-            <Column field="resource_name" header="Resource Name" sortable></Column>
+            <Column field="resource_name" header="Resource Name" sortable filter :showFilterMenu="false">
+                <template #filter="{ filterModel, filterCallback }">
+                    <InputText 
+                        v-model="filterModel.value" 
+                        type="text" 
+                        @input="filterCallback()" 
+                        placeholder="Search Resource Name..." 
+                        class="filter-box"
+                    />
+                </template>
+            </Column>
 
-            <Column field="graph_name" header="Resource Model" sortable></Column>
+            <Column field="graph_name" header="Graph Name" sortable filter :showFilterMenu="false">
+                <template #filter="{ filterModel, filterCallback }">
+                    <InputText 
+                        v-model="filterModel.value" 
+                        type="text" 
+                        @input="filterCallback()" 
+                        placeholder="Search Graph Name..." 
+                        class="filter-box"
+                    />
+                </template>
+            </Column>
 
             <Column field="timestamp" header="Date" sortable>
                 <template #body="slotProps">
@@ -163,6 +189,7 @@
                         type="text" 
                         @input="filterCallback()" 
                         placeholder="Search User..." 
+                        class="filter-box"
                     />
                 </template>
             </Column>
@@ -177,12 +204,23 @@
                         @change="filterCallback()"
                         placeholder="Select Action"
                         showClear
+                        class="filter-box"
+                    />
+                </template>
+            </Column>
+
+            <Column field="card_name" header="Card Name" sortable filter :showFilterMenu="false">
+                <template #filter="{ filterModel, filterCallback }">
+                    <InputText 
+                        v-model="filterModel.value" 
+                        type="text" 
+                        @input="filterCallback()" 
+                        placeholder="Search Card Name..." 
+                        class="filter-box"
                     />
                 </template>
             </Column>
             
-            <Column field="card_name" header="Card" sortable></Column>
-
         </DataTable>
     </div>
 </template>
