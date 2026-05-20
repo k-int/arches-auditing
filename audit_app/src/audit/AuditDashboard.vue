@@ -66,9 +66,9 @@
                     limit: rows.value,
                     sortField: sortField.value,
                     sortOrder: sortOrder.value === 1 ? 'asc' : sortOrder.value === -1 ? 'desc' : null,
-                    searchUser: filters.value.user_username.value,
-                    searchAction: filters.value.edittype_label.value,
-                    searchResourceID: filters.value.resourceinstanceid.value
+                    userFilter: filters.value.user_username.value,
+                    actionFilter: filters.value.edittype_label.value,
+                    resourceidFilter: filters.value.resourceinstanceid.value
                 }
             );
             edits.value = responseData.edits;

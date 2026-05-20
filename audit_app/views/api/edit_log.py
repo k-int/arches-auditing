@@ -37,9 +37,9 @@ class ResourceEditLogAPIView(View):
 
         sort_field = request.GET.get('sortField')
         sort_order = request.GET.get('sortOrder')
-        search_user = request.GET.get('searchUser')
-        action_filter = request.GET.get('searchAction')
-        resource_id_filter = request.GET.get('searchResourceID')
+        search_user = request.GET.get('userFilter')
+        action_filter = request.GET.get('actionFilter')
+        resource_id_filter = request.GET.get('resourceidFilter')
 
         ## get all edits 
         
