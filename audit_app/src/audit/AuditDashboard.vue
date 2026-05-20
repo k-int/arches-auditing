@@ -24,7 +24,8 @@
 
     const filters = ref<Filters>({
         user_username: { value: null },
-        edittype_label: { value: null }
+        edittype_label: { value: null },
+        resourceinstanceid: {value: null}
     });
 
     const actionOptions = ref([
@@ -66,7 +67,8 @@
                     sortField: sortField.value,
                     sortOrder: sortOrder.value === 1 ? 'asc' : sortOrder.value === -1 ? 'desc' : null,
                     searchUser: filters.value.user_username.value,
-                    searchAction: filters.value.edittype_label.value
+                    searchAction: filters.value.edittype_label.value,
+                    searchResourceID: filters.value.resourceinstanceid.value
                 }
             );
             edits.value = responseData.edits;
@@ -126,11 +128,21 @@
             class="edit-log-table"
             >
             
-            <Column field="resourceinstanceid" header="Resource ID" sortable>
+            <Column field="resourceinstanceid" header="Resource ID" sortable filter :showFilterMenu="false">
                 <template #body="slotProps">
                     <a :href="'/resource/' + slotProps.data.resourceinstanceid" target="_blank" class="resource-link">
                         {{ slotProps.data.resourceinstanceid }}
                     </a>
+                </template>
+
+                <template #filter="{ filterModel, filterCallback }">
+                    <InputText 
+                    v-model="filterModel.value" 
+                    type="text" 
+                    @input="filterCallback()" 
+                    placeholder="Search by resource ID..." 
+                    class="filter-box"
+                    />
                 </template>
             </Column>
 
@@ -144,14 +156,13 @@
                 </template>
             </Column>
 
-            <Column field="user_username" header="User" sortable filter>
+            <Column field="user_username" header="User" sortable filter :showFilterMenu="false">
                 <template #filter="{ filterModel, filterCallback }">
                     <InputText 
                         v-model="filterModel.value" 
                         type="text" 
                         @input="filterCallback()" 
                         placeholder="Search User..." 
-                        showClear
                     />
                 </template>
             </Column>
@@ -183,5 +194,9 @@
         align-items: center;
         min-height: 100vh;
         width: 100vw;
+    }
+
+    .filter-box {
+        width: 100%;
     }
 </style>

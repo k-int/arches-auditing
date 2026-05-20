@@ -39,6 +39,7 @@ class ResourceEditLogAPIView(View):
         sort_order = request.GET.get('sortOrder')
         search_user = request.GET.get('searchUser')
         action_filter = request.GET.get('searchAction')
+        resource_id_filter = request.GET.get('searchResourceID')
 
         ## get all edits 
         
@@ -86,6 +87,9 @@ class ResourceEditLogAPIView(View):
 
         if action_filter:
             filtered_edits = filtered_edits.filter(edittype=action_filter)
+
+        if resource_id_filter:
+            filtered_edits = filtered_edits.filter(resourceinstanceid__icontains=resource_id_filter)
 
         ## check node permissions
 
