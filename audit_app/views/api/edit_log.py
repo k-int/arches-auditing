@@ -38,6 +38,7 @@ class ResourceEditLogAPIView(View):
         sort_field = request.GET.get('sortField')
         sort_order = request.GET.get('sortOrder')
         search_user = request.GET.get('searchUser')
+        action_filter = request.GET.get('searchAction')
 
         ## get all edits 
         
@@ -78,10 +79,13 @@ class ResourceEditLogAPIView(View):
 
         ## filtering
 
+        filtered_edits = sorted_edits
+
         if search_user:
-            filtered_edits = sorted_edits.filter(user_username__icontains=search_user)
-        else:
-            filtered_edits = sorted_edits
+            filtered_edits = filtered_edits.filter(user_username__icontains=search_user)
+
+        if action_filter:
+            filtered_edits = filtered_edits.filter(edittype=action_filter)
 
         ## check node permissions
 

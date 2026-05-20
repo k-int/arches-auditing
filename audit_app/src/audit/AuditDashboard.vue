@@ -5,6 +5,7 @@
     import DataTable, { type DataTableStateEvent } from 'primevue/datatable';
     import Column from 'primevue/column';
     import InputText from 'primevue/inputtext';
+    import Select from 'primevue/select';
 
     import {
         fetchResourceEditLog,
@@ -21,9 +22,19 @@
     const rows = ref(5); 
     const totalRecords = ref(0);
 
-    const filters = ref({
+    const filters = ref<Filters>({
         user_username: { value: null },
+        edittype_label: { value: null }
     });
+
+    const actionOptions = ref([
+        { label: 'Create Resource', value: 'create' },
+        { label: 'Delete Resource', value: 'delete' },
+        { label: 'Delete Tile', value: 'tile delete' },
+        { label: 'Create Tile', value: 'tile create' },
+        { label: 'Update Tile', value: 'tile edit' },
+        { label: 'Bulk Create Tile', value: 'bulk_create' },
+    ]);
 
     const toast = useToast();
     const { $gettext } = useGettext();
@@ -54,7 +65,8 @@
                     limit: rows.value,
                     sortField: sortField.value,
                     sortOrder: sortOrder.value === 1 ? 'asc' : sortOrder.value === -1 ? 'desc' : null,
-                    searchUser: filters.value.user_username.value
+                    searchUser: filters.value.user_username.value,
+                    searchAction: filters.value.edittype_label.value
                 }
             );
             edits.value = responseData.edits;
@@ -138,14 +150,26 @@
                         v-model="filterModel.value" 
                         type="text" 
                         @input="filterCallback()" 
-                        class="p-column-filter" 
                         placeholder="Search User..." 
+                        showClear
                     />
                 </template>
             </Column>
 
-            <Column field="edittype_label" header="Action" sortable></Column>
-
+            <Column field="edittype_label" header="Action" sortable filter :showFilterMenu="false">
+                <template #filter="{ filterModel, filterCallback }">
+                    <Select 
+                        v-model="filterModel.value"
+                        :options="actionOptions"
+                        optionLabel="label" 
+                        optionValue="value"
+                        @change="filterCallback()"
+                        placeholder="Select Action"
+                        showClear
+                    />
+                </template>
+            </Column>
+            
             <Column field="card_name" header="Card" sortable></Column>
 
         </DataTable>
