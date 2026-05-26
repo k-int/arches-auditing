@@ -159,6 +159,8 @@ class ResourceEditLogAPIView(View):
                 "tileinstanceid": edit.tileinstanceid,
                 "card_name": edit.card_name if edit.card_name else "N/A",
                 "note": edit.note,
+                "old_value": edit.oldvalue,
+                "new_value": edit.newvalue
             })
             
         return JSONResponse({"edits": returned_edits, "total_count": total_count, "action_counts": action_counts_dict})
