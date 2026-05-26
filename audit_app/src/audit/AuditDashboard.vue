@@ -1,7 +1,5 @@
 <script setup lang="ts">
     import { onMounted, ref } from "vue";
-    import { useGettext } from "vue3-gettext";
-    import { useToast } from "primevue/usetoast";
     import DataTable, { type DataTableStateEvent } from 'primevue/datatable';
     import Column from 'primevue/column';
     import InputText from 'primevue/inputtext';
@@ -40,17 +38,6 @@
         { label: 'Update Tile', value: 'tile edit' },
         { label: 'Bulk Create Tile', value: 'bulk_create' },
     ]);
-
-    const toast = useToast();
-    const { $gettext } = useGettext();
-
-    import {
-        DANGER,
-        DEFAULT_ERROR_TOAST_LIFE,
-        DEFAULT_TOAST_LIFE,
-        ERROR,
-        SUCCESS,
-    } from "@/audit/constants.ts";
 
     const dateTimeFormatter = new Intl.DateTimeFormat(undefined, {
         dateStyle: "medium",
