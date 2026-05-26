@@ -78,8 +78,8 @@
         isLoading.value = true;
 
         try {
-            const responseData = await fetchResourceEditLog(
-                {
+            const [responseData] = await Promise.all([
+                fetchResourceEditLog({
                     offset: first.value,
                     limit: rows.value,
                     sortField: sortField.value,
@@ -90,8 +90,10 @@
                     resourceNameFilter: filters.value.resource_name.value,
                     graphNameFilter: filters.value.graph_name.value,
                     cardNameFilter: filters.value.card_name.value
-                }
-            );
+                }),
+                new Promise(resolve => setTimeout(resolve, 600))
+            ]);
+
             edits.value = responseData.edits;
             totalRecords.value = responseData.total_count;
             actionCounts.value = responseData.action_counts;
@@ -175,11 +177,7 @@
 
             </div>
 
-            <template v-if="isLoading">
-                <Skeleton class="edit-log-table-skeleton" height="325px";></Skeleton>
-            </template>
-
-            <div v-else class="edit-log-table-container">
+            <div class="edit-log-table-container">
                 <DataTable 
                     lazy
                     filterDisplay="row"
