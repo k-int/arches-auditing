@@ -6,6 +6,7 @@
     import InputText from 'primevue/inputtext';
     import Select from 'primevue/select';
     import DatePicker from 'primevue/datepicker';
+    import Skeleton from 'primevue/skeleton';
 
     import {
         fetchResourceEditLog,
@@ -46,6 +47,29 @@
         dateStyle: "medium",
         timeStyle: "medium",
     });
+
+    const statCardsConfig = ref([
+        {
+            title: "Total Actions",
+            getValue: () => totalRecords.value ?? 0
+        },
+        {
+            title: "Resources Created",
+            getValue: () => actionCounts.value?.create ?? 0
+        },
+        {
+            title: "Resources Deleted",
+            getValue: () => actionCounts.value?.delete ?? 0
+        },
+        {
+            title: "Resources Edited",
+            getValue: () => (
+                (actionCounts.value?.["tile edit"] ?? 0) + 
+                (actionCounts.value?.["tile create"] ?? 0) + 
+                (actionCounts.value?.["tile delete"] ?? 0)
+            )
+        }
+    ]);
 
     onMounted(loadEditLog);
     
@@ -109,56 +133,40 @@
         <div class="dashboard-container">
 
             <div class = "edit-log-stats-row">
-                <Card class="stat-card">
-                    <template #title>
-                        <span class="stat-title">Total Actions</span>
-                    </template>
-                    <template #content>
-                        <p class="stat-content">
-                            {{ totalRecords }}
-                        </p>
-                    </template>
-                </Card>
+                
+                <template v-if="isLoading">
+                    <Skeleton 
+                        v-for="(card, index) in statCardsConfig" 
+                        :key="'skeleton-' + index" 
+                        height="150px" 
+                        width="200px"
+                    />
+                </template>
 
-                <Card class="stat-card">
-                    <template #title>
-                        <span class="stat-title">Resources Created</span>
-                    </template>
-                    <template #content>
-                        <p class="stat-content">
-                            {{ actionCounts.create }}
-                        </p>
-                    </template>
-                </Card>
+                <template v-else>
+                    <Card 
+                        v-for="(card, index) in statCardsConfig" 
+                        :key="'card-' + index" 
+                        class="stat-card"
+                    >
+                        <template #title>
+                            <span class="stat-title">{{ card.title }}</span>
+                        </template>
+                        <template #content>
+                            <p class="stat-content">
+                                {{ card.getValue() }}
+                            </p>
+                        </template>
+                    </Card>
+                </template>
 
-                <Card class="stat-card">
-                    <template #title>
-                        <span class="stat-title">Resources Deleted</span>
-                    </template>
-                    <template #content>
-                        <p class="stat-content">
-                            {{ actionCounts.delete }}
-                        </p>
-                    </template>
-                </Card>
-
-                <Card class="stat-card">
-                    <template #title>
-                        <span class="stat-title">Resources Edited</span>
-                    </template>
-                    <template #content>
-                        <p class="stat-content">
-                            {{ 
-                                (actionCounts?.["tile edit"] ?? 0) + 
-                                (actionCounts?.["tile create"] ?? 0) + 
-                                (actionCounts?.["tile delete"] ?? 0) 
-                            }}
-                        </p>
-                    </template>
-                </Card>
             </div>
 
-            <div class="edit-log-table-container">
+            <template v-if="isLoading">
+                <Skeleton class="edit-log-table-skeleton" height="325px";></Skeleton>
+            </template>
+
+            <div v-else class="edit-log-table-container">
                 <DataTable 
                     lazy
                     filterDisplay="row"
@@ -281,6 +289,7 @@
                     
                 </DataTable>
             </div>
+
         </div>
     </div>
 </template>
@@ -315,6 +324,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        min-height: 300px;
         /* border: 1px solid red; */
     }
     
