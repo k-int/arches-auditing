@@ -28,7 +28,8 @@
         graph_name: {value: null},
         user_username: { value: null },
         edittype_label: { value: null },
-        card_name: { value: null }
+        card_name: { value: null },
+        timestamp: { value: null }
     });
 
     const actionOptions = ref([
@@ -104,7 +105,7 @@
         first.value = event.first;
         rows.value = event.rows;
 
-        filters.value = event.filters as Filters;
+        filters.value = event.filters;
 
         loadEditLog();
     }

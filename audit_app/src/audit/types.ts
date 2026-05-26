@@ -24,7 +24,13 @@ export interface FetchEditLogParams {
 }
 
 export interface Filters {
-    user_username: string | null;
+    resourceinstanceid:  {value: string | null};
+    resource_name:  {value: string | null};
+    graph_name:  {value: string | null};
+    user_username:  {value: string | null};
+    edittype_label:  {value: string | null};
+    card_name:  {value: string | null};
+    timestamp: {value: Date | null};
 }
 
 import type { EDIT, VIEW } from "@/audit/constants.ts";
