@@ -104,6 +104,19 @@
         }
     }
 
+    const debounce = (fn: Function, delay: number) => {
+        let timeoutId: any;
+        
+        return (...args: any[]) => {
+            clearTimeout(timeoutId);
+            timeoutId = setTimeout(() => fn(...args), delay);
+        };
+    }
+
+    const debouncedFilter = debounce((callback: () => void) => {
+        callback();
+    }, 800);
+
     const formatTimestamp = (timestamp: string) => {
         return dateTimeFormatter.format(new Date(timestamp));
     }
@@ -198,7 +211,7 @@
                             <InputText 
                             v-model="filterModel.value" 
                             type="text" 
-                            @input="filterCallback()" 
+                            @input="debouncedFilter(filterCallback)"
                             placeholder="Search by resource ID..." 
                             class="filter-box"
                             />
@@ -210,7 +223,7 @@
                             <InputText 
                                 v-model="filterModel.value" 
                                 type="text" 
-                                @input="filterCallback()" 
+                                @input="debouncedFilter(filterCallback)"
                                 placeholder="Search Resource Name..." 
                                 class="filter-box"
                             />
@@ -222,7 +235,7 @@
                             <InputText 
                                 v-model="filterModel.value" 
                                 type="text" 
-                                @input="filterCallback()" 
+                                @input="debouncedFilter(filterCallback)"
                                 placeholder="Search Graph Name..." 
                                 class="filter-box"
                             />
@@ -253,7 +266,7 @@
                             <InputText 
                                 v-model="filterModel.value" 
                                 type="text" 
-                                @input="filterCallback()" 
+                                @input="debouncedFilter(filterCallback)"
                                 placeholder="Search User..." 
                                 class="filter-box"
                             />
@@ -280,7 +293,7 @@
                             <InputText 
                                 v-model="filterModel.value" 
                                 type="text" 
-                                @input="filterCallback()" 
+                                @input="debouncedFilter(filterCallback)"
                                 placeholder="Search Card Name..." 
                                 class="filter-box"
                             />
