@@ -9,7 +9,7 @@ from arches.app.models.card import Card
 from arches.app.models.resource import Resource
 from arches.app.models.graph import Graph
 from arches.app.models.system_settings import settings
-from django.db.models import Q, Subquery, OuterRef, UUIDField
+from django.db.models import Q, Subquery, OuterRef, UUIDField, Count
 from django.db.models.functions import Cast
 from arches.app.utils.response import JSONErrorResponse, JSONResponse
 
@@ -122,6 +122,16 @@ class ResourceEditLogAPIView(View):
         total_count = permitted_edits.count()
         paginated_edits = permitted_edits[offset : offset + limit]
 
+        ## stats
+
+        action_counts = (
+            permitted_edits.values('edittype')
+            .annotate(count=Count('edittype'))
+            .order_by() # needed to clear the default order from the GROUP BY vars
+        )
+
+        action_counts_dict = {item['edittype']: item['count'] for item in action_counts}
+
         ## compiling data
 
         returned_edits = []
@@ -151,4 +161,4 @@ class ResourceEditLogAPIView(View):
                 "note": edit.note,
             })
             
-        return JSONResponse({"edits": returned_edits, "total_count": total_count})
+        return JSONResponse({"edits": returned_edits, "total_count": total_count, "action_counts": action_counts_dict})
