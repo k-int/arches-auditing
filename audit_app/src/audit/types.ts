@@ -33,6 +33,15 @@ export interface Filters {
     timestamp: {value: Date | null};
 }
 
+export interface ActionCounts {
+    "create"?: number,
+    "delete"?: number,
+    "tile delete"?: number,
+    "tile create"?: number,
+    "tile edit"?: number,
+    "bulk_create"?: number
+}
+
 import type { EDIT, VIEW } from "@/audit/constants.ts";
 
 export type DataComponentMode = typeof EDIT | typeof VIEW;

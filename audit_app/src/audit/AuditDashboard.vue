@@ -2,14 +2,16 @@
     import { onMounted, ref } from "vue";
     import DataTable, { type DataTableStateEvent } from 'primevue/datatable';
     import Column from 'primevue/column';
+    import Card from 'primevue/card';
     import InputText from 'primevue/inputtext';
     import Select from 'primevue/select';
+    import DatePicker from 'primevue/datepicker';
 
     import {
         fetchResourceEditLog,
     } from "@/audit/api.ts";
 
-    import type { EditLogEntry, Filters } from "@/audit/types.ts";
+    import { EditLogEntry, ActionCounts, Filters } from "@/audit/types.ts";
 
     const isLoading = ref(true);
     const edits = ref([] as EditLogEntry[]);
@@ -19,6 +21,7 @@
     const first = ref(0);
     const rows = ref(5); 
     const totalRecords = ref(0);
+    const actionCounts = ref({} as ActionCounts);
 
     const filters = ref<Filters>({
         resourceinstanceid: {value: null},
@@ -67,6 +70,7 @@
             );
             edits.value = responseData.edits;
             totalRecords.value = responseData.total_count;
+            actionCounts.value = responseData.action_counts;
 
         } catch (caughtError) {
             console.log("Unable to fetch edit history: ", caughtError)
@@ -100,129 +104,244 @@
 </script>
 
 <template>
+    <div class="edit-log-page">
 
-    <div class="edit-log-component">
-        <DataTable 
-            lazy
-            filterDisplay="row"
-            v-model:filters="filters"
-            responsiveLayout="scroll"
-            size="large"
-            striped-rows
-            removableSort
-            :value="edits" 
-            :loading="isLoading" 
-            :paginator="true" 
-            :rows="rows"
-            :first="first"
-            :totalRecords="totalRecords"
-            @sort="onChange"
-            @page="onChange"
-            @filter="onChange"
-            class="edit-log-table"
-            >
-            
-            <Column field="resourceinstanceid" header="Resource ID" sortable filter :showFilterMenu="false">
-                <template #body="slotProps">
-                    <a :href="'/resource/' + slotProps.data.resourceinstanceid" target="_blank" class="resource-link">
-                        {{ slotProps.data.resourceinstanceid }}
-                    </a>
-                </template>
+        <div class="dashboard-container">
 
-                <template #filter="{ filterModel, filterCallback }">
-                    <InputText 
-                    v-model="filterModel.value" 
-                    type="text" 
-                    @input="filterCallback()" 
-                    placeholder="Search by resource ID..." 
-                    class="filter-box"
-                    />
-                </template>
-            </Column>
+            <div class = "edit-log-stats-row">
+                <Card class="stat-card">
+                    <template #title>
+                        <span class="stat-title">Total Actions</span>
+                    </template>
+                    <template #content>
+                        <p class="stat-content">
+                            {{ totalRecords }}
+                        </p>
+                    </template>
+                </Card>
 
-            <Column field="resource_name" header="Resource Name" sortable filter :showFilterMenu="false">
-                <template #filter="{ filterModel, filterCallback }">
-                    <InputText 
-                        v-model="filterModel.value" 
-                        type="text" 
-                        @input="filterCallback()" 
-                        placeholder="Search Resource Name..." 
-                        class="filter-box"
-                    />
-                </template>
-            </Column>
+                <Card class="stat-card">
+                    <template #title>
+                        <span class="stat-title">Resources Created</span>
+                    </template>
+                    <template #content>
+                        <p class="stat-content">
+                            {{ actionCounts.create }}
+                        </p>
+                    </template>
+                </Card>
 
-            <Column field="graph_name" header="Graph Name" sortable filter :showFilterMenu="false">
-                <template #filter="{ filterModel, filterCallback }">
-                    <InputText 
-                        v-model="filterModel.value" 
-                        type="text" 
-                        @input="filterCallback()" 
-                        placeholder="Search Graph Name..." 
-                        class="filter-box"
-                    />
-                </template>
-            </Column>
+                <Card class="stat-card">
+                    <template #title>
+                        <span class="stat-title">Resources Deleted</span>
+                    </template>
+                    <template #content>
+                        <p class="stat-content">
+                            {{ actionCounts.delete }}
+                        </p>
+                    </template>
+                </Card>
 
-            <Column field="timestamp" header="Date" sortable>
-                <template #body="slotProps">
-                    {{ formatTimestamp(slotProps.data.timestamp) }}
-                </template>
-            </Column>
+                <Card class="stat-card">
+                    <template #title>
+                        <span class="stat-title">Resources Edited</span>
+                    </template>
+                    <template #content>
+                        <p class="stat-content">
+                            {{ 
+                                (actionCounts?.["tile edit"] ?? 0) + 
+                                (actionCounts?.["tile create"] ?? 0) + 
+                                (actionCounts?.["tile delete"] ?? 0) 
+                            }}
+                        </p>
+                    </template>
+                </Card>
+            </div>
 
-            <Column field="user_username" header="User" sortable filter :showFilterMenu="false">
-                <template #filter="{ filterModel, filterCallback }">
-                    <InputText 
-                        v-model="filterModel.value" 
-                        type="text" 
-                        @input="filterCallback()" 
-                        placeholder="Search User..." 
-                        class="filter-box"
-                    />
-                </template>
-            </Column>
+            <div class="edit-log-table-container">
+                <DataTable 
+                    lazy
+                    filterDisplay="row"
+                    v-model:filters="filters"
+                    responsiveLayout="scroll"
+                    size="large"
+                    striped-rows
+                    removableSort
+                    :value="edits" 
+                    :loading="isLoading" 
+                    :paginator="true" 
+                    :rows="rows"
+                    :first="first"
+                    :totalRecords="totalRecords"
+                    @sort="onChange"
+                    @page="onChange"
+                    @filter="onChange"
+                    class="edit-log-table"
+                    >
+                    
+                    <Column field="resourceinstanceid" header="Resource ID" sortable filter :showFilterMenu="false">
+                        <template #body="slotProps">
+                            <a :href="'/resource/' + slotProps.data.resourceinstanceid" target="_blank" class="resource-link">
+                                {{ slotProps.data.resourceinstanceid }}
+                            </a>
+                        </template>
 
-            <Column field="edittype_label" header="Action" sortable filter :showFilterMenu="false">
-                <template #filter="{ filterModel, filterCallback }">
-                    <Select 
-                        v-model="filterModel.value"
-                        :options="actionOptions"
-                        optionLabel="label" 
-                        optionValue="value"
-                        @change="filterCallback()"
-                        placeholder="Select Action"
-                        showClear
-                        class="filter-box"
-                    />
-                </template>
-            </Column>
+                        <template #filter="{ filterModel, filterCallback }">
+                            <InputText 
+                            v-model="filterModel.value" 
+                            type="text" 
+                            @input="filterCallback()" 
+                            placeholder="Search by resource ID..." 
+                            class="filter-box"
+                            />
+                        </template>
+                    </Column>
 
-            <Column field="card_name" header="Card Name" sortable filter :showFilterMenu="false">
-                <template #filter="{ filterModel, filterCallback }">
-                    <InputText 
-                        v-model="filterModel.value" 
-                        type="text" 
-                        @input="filterCallback()" 
-                        placeholder="Search Card Name..." 
-                        class="filter-box"
-                    />
-                </template>
-            </Column>
-            
-        </DataTable>
+                    <Column field="resource_name" header="Resource Name" sortable filter :showFilterMenu="false">
+                        <template #filter="{ filterModel, filterCallback }">
+                            <InputText 
+                                v-model="filterModel.value" 
+                                type="text" 
+                                @input="filterCallback()" 
+                                placeholder="Search Resource Name..." 
+                                class="filter-box"
+                            />
+                        </template>
+                    </Column>
+
+                    <Column field="graph_name" header="Graph Name" sortable filter :showFilterMenu="false">
+                        <template #filter="{ filterModel, filterCallback }">
+                            <InputText 
+                                v-model="filterModel.value" 
+                                type="text" 
+                                @input="filterCallback()" 
+                                placeholder="Search Graph Name..." 
+                                class="filter-box"
+                            />
+                        </template>
+                    </Column>
+
+                    <Column field="timestamp" header="Date" sortable filter :showFilterMenu="false">
+                        <template #body="slotProps">
+                            {{ formatTimestamp(slotProps.data.timestamp) }}
+                        </template>
+
+                        <template #filter="{ filterModel, filterCallback }">
+                            <DatePicker 
+                                :modelValue="filterModel ? filterModel.value : null"
+                                @update:modelValue="(val) => { if (filterModel) filterModel.value = val; }"
+                                @date-select="filterCallback()"
+                                @clear="filterCallback()"
+                                selectionMode="range" :manualInput="false"  dateFormat="yy-mm-dd"
+                                placeholder="Select Date Range"
+                                showClear
+                                class="filter-box"
+                            />
+                        </template>
+                    </Column>
+
+                    <Column field="user_username" header="User" sortable filter :showFilterMenu="false">
+                        <template #filter="{ filterModel, filterCallback }">
+                            <InputText 
+                                v-model="filterModel.value" 
+                                type="text" 
+                                @input="filterCallback()" 
+                                placeholder="Search User..." 
+                                class="filter-box"
+                            />
+                        </template>
+                    </Column>
+
+                    <Column field="edittype_label" header="Action" sortable filter :showFilterMenu="false">
+                        <template #filter="{ filterModel, filterCallback }">
+                            <Select 
+                                v-model="filterModel.value"
+                                :options="actionOptions"
+                                optionLabel="label" 
+                                optionValue="value"
+                                @change="filterCallback()"
+                                placeholder="Select Action"
+                                showClear
+                                class="filter-box"
+                            />
+                        </template>
+                    </Column>
+
+                    <Column field="card_name" header="Card Name" sortable filter :showFilterMenu="false">
+                        <template #filter="{ filterModel, filterCallback }">
+                            <InputText 
+                                v-model="filterModel.value" 
+                                type="text" 
+                                @input="filterCallback()" 
+                                placeholder="Search Card Name..." 
+                                class="filter-box"
+                            />
+                        </template>
+                    </Column>
+                    
+                </DataTable>
+            </div>
+        </div>
     </div>
 </template>
 
 <style scoped>
-    .edit-log-component {
+
+    .dashboard-container {
+        width: 80%;
+        /* border: 1px solid orange; */
+    }
+
+    .edit-log-page {
+        background-color: white;
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-direction: column;
         min-height: 100vh;
         width: 100vw;
     }
 
+    .edit-log-stats-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        /* border: 1px solid blue; */
+        height: 150px;
+        margin-bottom: 150px;
+    }
+
+    .edit-log-table-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* border: 1px solid red; */
+    }
+    
+    .p-datatable {
+        border: 1px solid lightgrey;
+        width: 100%;
+    }
+
     .filter-box {
         width: 100%;
+    }
+
+    .stat-card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 200px;
+        /* border: 1px solid purple; */
+        text-align: center;
+    }
+
+    .stat-title {
+        font-size: 2rem;
+    }
+
+    .stat-content {
+        font-size: 4rem;
     }
 </style>
