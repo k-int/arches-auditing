@@ -143,7 +143,7 @@
 </script>
 
 <template>
-    <div class="edit-log-page">
+    <div class="audit-app-page">
 
         <div class="dashboard-container">
 
@@ -307,19 +307,19 @@
 
 <style scoped>
 
-    .dashboard-container {
-        width: 80%;
-        /* border: 1px solid orange; */
-    }
-
-    .edit-log-page {
+    .audit-app-page {
         background-color: white;
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
         flex-direction: column;
         min-height: 100vh;
         width: 100vw;
+    }
+
+    .dashboard-container {
+        width: 80%;
+        /* border: 1px solid orange; */
     }
 
     .edit-log-stats-row {
@@ -328,14 +328,14 @@
         align-items: center;
         /* border: 1px solid blue; */
         height: 150px;
-        margin-bottom: 150px;
+        margin-bottom: 75px;
+        margin-top: 75px;
     }
 
     .edit-log-table-container {
         display: flex;
         justify-content: center;
         align-items: center;
-        min-height: 300px;
         /* border: 1px solid red; */
     }
     
