@@ -7,6 +7,7 @@
     import Select from 'primevue/select';
     import DatePicker from 'primevue/datepicker';
     import Skeleton from 'primevue/skeleton';
+    import Panel from 'primevue/panel';
 
     import {
         fetchResourceEditLog,
@@ -23,6 +24,10 @@
     const rows = ref(5); 
     const totalRecords = ref(0);
     const actionCounts = ref({} as ActionCounts);
+
+    const selectedEditLogId = ref<string | null>(null);
+    const selectedEditLogOldValue = ref(null as Record<string, any> | null);
+    const selectedEditLogNewValue = ref(null as Record<string, any> | null);
 
     const filters = ref<Filters>({
         resourceinstanceid: {value: null},
@@ -47,6 +52,12 @@
         dateStyle: "medium",
         timeStyle: "medium",
     });
+
+    const tileChangeEdits = ['Tile Deleted', 'Tile Created', 'Tile Updated'];
+
+    const isRowInspectable = (rowData: EditLogEntry) => {
+        return tileChangeEdits.includes(rowData.edittype_label);
+    };
 
     const statCardsConfig = ref([
         {
@@ -137,8 +148,28 @@
 
         filters.value = event.filters;
 
+        selectedEditLogId.value = null;
+        selectedEditLogOldValue.value = null;
+        selectedEditLogNewValue.value = null;
+
         loadEditLog();
     }
+
+    const handleCheckboxChange = (event: Event, rowData: EditLogEntry) => {
+        const isChecked = (event.target as HTMLInputElement).checked;
+
+        if (isChecked) {
+            selectedEditLogId.value = rowData.editlogid;
+            selectedEditLogOldValue.value = rowData.old_value;
+            selectedEditLogNewValue.value = rowData.new_value;
+        } else {
+            if (selectedEditLogId.value === rowData.editlogid) {
+                selectedEditLogId.value = null;
+                selectedEditLogOldValue.value = null;
+                selectedEditLogNewValue.value = null;
+            }
+        }
+    };
 
 </script>
 
@@ -297,9 +328,37 @@
                             />
                         </template>
                     </Column>
+
+                    <Column header="View Change" :sortable="false" :filter="false" bodyClass="text-center">
+                        <template #body="slotProps">
+                            <div class="checkbox-container">
+                                <input 
+                                    v-if="isRowInspectable(slotProps.data)"
+                                    type="checkbox"
+                                    :checked="selectedEditLogId === slotProps.data.editlogid"
+                                    @change="handleCheckboxChange($event, slotProps.data)"
+                                    class="table-checkbox"
+                                />
+                            </div>
+                        </template>
+                    </Column>
                     
                 </DataTable>
             </div>
+
+            <template v-if="selectedEditLogOldValue || selectedEditLogNewValue">
+                <div class="json-value-row">
+                    <Panel header="Old Value" class="json-value-container">
+                        <pre v-if="selectedEditLogOldValue && Object.keys(selectedEditLogOldValue).length > 0">{{ JSON.stringify(selectedEditLogOldValue, null, 2) }}</pre>
+                        <p v-else>No previous value</p>
+                    </Panel>
+
+                    <Panel header="New Value" class="json-value-container">
+                        <pre v-if="selectedEditLogNewValue">{{ JSON.stringify(selectedEditLogNewValue, null, 2) }}</pre>
+                        <p v-else>No new value</p>
+                    </Panel>
+                </div>
+            </template>
 
         </div>
     </div>
@@ -313,12 +372,15 @@
         justify-content: flex-start;
         align-items: center;
         flex-direction: column;
-        min-height: 100vh;
         width: 100vw;
+        height: 100vh;
+        overflow-y: scroll;
+        font-size: 1.5rem;
     }
 
     .dashboard-container {
         width: 80%;
+        padding-bottom: 100px;
         /* border: 1px solid orange; */
     }
 
@@ -340,8 +402,12 @@
     }
     
     .p-datatable {
-        border: 1px solid lightgrey;
+        /* border: 1px solid lightgrey; */
         width: 100%;
+    }
+
+    .checkbox-container {
+        text-align: center;
     }
 
     .filter-box {
@@ -365,4 +431,31 @@
     .stat-content {
         font-size: 4rem;
     }
+
+    .json-value-row{
+        display: flex;
+        justify-content: space-between;
+        /* border: 1px solid pink; */
+        margin-top: 75px;
+    }
+
+    .json-value-container {
+        /* border: 1px solid green; */
+        height: 450px;
+        width: 48%;
+        overflow: auto;
+    }
+
+    .json-value-container :deep(.p-panel-title) {
+        font-size: 2rem;
+    }
+
+    .table-checkbox {
+        transform: scale(1.2);
+    }
+
+    pre {
+        background-color: #f8fafc; 
+    }
+
 </style>

@@ -13,6 +13,8 @@ export interface EditLogEntry {
     tileinstanceid: string | null;
     card_name: string | null;
     note: string | null;
+    old_value: Record<string, any> | null;
+    new_value: Record<string, any> | null;
 }
 
 export interface FetchEditLogParams {
