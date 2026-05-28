@@ -8,6 +8,8 @@
     import DatePicker from 'primevue/datepicker';
     import Skeleton from 'primevue/skeleton';
     import Panel from 'primevue/panel';
+    import Button from 'primevue/button';
+    import 'primeicons/primeicons.css';
 
     import {
         fetchResourceEditLog,
@@ -396,6 +398,18 @@
                 </DataTable>
             </div>
 
+            <div class="table-actions-bar">
+                <Button 
+                    raised 
+                    size="large"
+                    severity="secondary"
+                    class="export-csv-btn"
+                    >
+                    <span>Export to CSV</span>
+                    <i class="pi pi-download" style="font-size: 2rem"></i>
+                </Button>
+            </div>
+
             <template v-if="selectedEditLogOldValue || selectedEditLogNewValue">
                 <div class="json-value-row">
                     <Panel header="Old Value" class="json-value-container">
@@ -478,6 +492,18 @@
 
     .stat-content {
         font-size: 4rem;
+    }
+
+    .table-actions-bar{
+        display: flex;
+        justify-content: end;
+        margin-bottom: 15px;
+    }
+
+    .export-csv-btn {
+        margin-top: 30px;
+        padding: 12px 24px;
+        font-size: 1.6rem;
     }
 
     .edit-log-table-container {
