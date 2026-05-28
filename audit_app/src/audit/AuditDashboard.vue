@@ -327,10 +327,12 @@
                         <template #filter="{ filterModel, filterCallback }">
                             <DatePicker 
                                 :modelValue="filterModel ? filterModel.value : null"
+                                :manualInput="true"
                                 @update:modelValue="(val) => { if (filterModel) filterModel.value = val; }"
                                 @date-select="filterCallback()"
                                 @clear="filterCallback()"
-                                selectionMode="range" :manualInput="false"  dateFormat="yy-mm-dd"
+                                selectionMode="range" 
+                                dateFormat="yy-mm-dd"
                                 placeholder="Select Date Range"
                                 showClear
                                 class="filter-box"
@@ -423,11 +425,11 @@
         width: 100vw;
         height: 100vh;
         overflow-y: scroll;
-        font-size: 1.5rem;
+        font-size: 1.7rem;
     }
 
     .dashboard-container {
-        width: 80%;
+        width: 85%;
         padding-bottom: 100px;
         /* border: 1px solid orange; */
     }
@@ -496,6 +498,15 @@
 
     .filter-box {
         width: 100%;
+        font-size: 1.3rem;
+    }
+
+    .filter-box :deep(.p-datepicker-input) {
+        font-size: 1.3rem;
+    }
+
+    .filter-box :deep(.p-select-label) {
+        font-size: 1.3rem;
     }
 
     .json-value-row{
