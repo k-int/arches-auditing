@@ -59,7 +59,7 @@
         return tileChangeEdits.includes(rowData.edittype_label);
     };
 
-    const statCardsConfig = ref([
+    const resourceStatCardsConfig = ref([
         {
             title: "Total Actions",
             getValue: () => totalRecords.value ?? 0
@@ -80,6 +80,21 @@
                 (actionCounts.value?.["tile delete"] ?? 0)
             )
         }
+    ])
+
+    const tileStatCardsConfig = ([
+        {
+            title: "Tiles Created",
+            getValue: () => actionCounts.value?.["tile create"] ?? 0
+        },
+        {
+            title: "Tiles Deleted",
+            getValue: () => actionCounts.value?.["tile delete"] ?? 0
+        },
+        {
+            title: "Tiles Edited",
+            getValue: () => actionCounts.value?.["tile edit"] ?? 0
+        },
     ]);
 
     onMounted(loadEditLog);
@@ -178,34 +193,67 @@
 
         <div class="dashboard-container">
 
-            <div class = "edit-log-stats-row">
-                
-                <template v-if="isLoading">
-                    <Skeleton 
-                        v-for="(card, index) in statCardsConfig" 
-                        :key="'skeleton-' + index" 
-                        height="150px" 
-                        width="200px"
-                    />
-                </template>
+            <div class="stat-rows-container">
 
-                <template v-else>
-                    <Card 
-                        v-for="(card, index) in statCardsConfig" 
-                        :key="'card-' + index" 
-                        class="stat-card"
-                    >
-                        <template #title>
-                            <span class="stat-title">{{ card.title }}</span>
-                        </template>
-                        <template #content>
-                            <p class="stat-content">
-                                {{ card.getValue() }}
-                            </p>
-                        </template>
-                    </Card>
-                </template>
+                <div class="stat-row  stat-row-resources">
+                    
+                    <template v-if="isLoading">
+                        <Skeleton 
+                            v-for="(card, index) in resourceStatCardsConfig" 
+                            :key="'skeleton-' + index" 
+                            height="150px" 
+                            width="200px"
+                        />
+                    </template>
 
+                    <template v-else>
+                        <Card 
+                            v-for="(card, index) in resourceStatCardsConfig" 
+                            :key="'card-' + index" 
+                            class="stat-card"
+                        >
+                            <template #title>
+                                <span class="stat-title">{{ card.title }}</span>
+                            </template>
+                            <template #content>
+                                <p class="stat-content">
+                                    {{ card.getValue() }}
+                                </p>
+                            </template>
+                        </Card>
+                    </template>
+
+                </div>
+
+                <div class="stat-row stat-row-tiles">
+                    
+                    <template v-if="isLoading">
+                        <Skeleton 
+                            v-for="(card, index) in tileStatCardsConfig" 
+                            :key="'skeleton-' + index" 
+                            height="150px" 
+                            width="200px"
+                        />
+                    </template>
+
+                    <template v-else>
+                        <Card 
+                            v-for="(card, index) in tileStatCardsConfig" 
+                            :key="'card-' + index" 
+                            class="stat-card"
+                        >
+                            <template #title>
+                                <span class="stat-title">{{ card.title }}</span>
+                            </template>
+                            <template #content>
+                                <p class="stat-content">
+                                    {{ card.getValue() }}
+                                </p>
+                            </template>
+                        </Card>
+                    </template>
+
+                </div>
             </div>
 
             <div class="edit-log-table-container">
@@ -384,14 +432,50 @@
         /* border: 1px solid orange; */
     }
 
-    .edit-log-stats-row {
+    .stat-rows-container{
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
+        /* border: 1px solid magenta; */
+        flex-wrap: wrap;
+        margin-top: 75px;
+        margin-bottom: 75px;
+    }
+    
+    .stat-row {
+        display: flex;
         align-items: center;
         /* border: 1px solid blue; */
         height: 150px;
-        margin-bottom: 75px;
-        margin-top: 75px;
+        width: 100%;
+    }
+    
+    .stat-row-resources {
+        margin-bottom: 40px;
+        justify-content: center;
+        gap: 125px;
+    }
+    
+    .stat-row-tiles {
+        justify-content: center;
+        gap: 125px;
+    }
+
+    .stat-card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 200px;
+        /* border: 1px solid purple; */
+        text-align: center;
+    }
+
+    .stat-title {
+        font-size: 2rem;
+    }
+
+    .stat-content {
+        font-size: 4rem;
     }
 
     .edit-log-table-container {
@@ -412,24 +496,6 @@
 
     .filter-box {
         width: 100%;
-    }
-
-    .stat-card {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        width: 200px;
-        /* border: 1px solid purple; */
-        text-align: center;
-    }
-
-    .stat-title {
-        font-size: 2rem;
-    }
-
-    .stat-content {
-        font-size: 4rem;
     }
 
     .json-value-row{
