@@ -425,7 +425,7 @@
         width: 100vw;
         height: 100vh;
         overflow-y: scroll;
-        font-size: 1.7rem;
+        font-size: 1.5rem;
     }
 
     .dashboard-container {
