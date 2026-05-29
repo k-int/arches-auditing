@@ -13,7 +13,7 @@ from django.db.models import Q, Subquery, OuterRef, UUIDField, Count
 from django.db.models.functions import Cast
 from arches.app.utils.response import JSONErrorResponse, JSONResponse
 
-from audit_app.const import EDIT_TYPE_LABELS
+from arches_auditing.const import EDIT_TYPE_LABELS
 
 
 class ResourceEditLogAPIView(View):

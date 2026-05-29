@@ -1,5 +1,5 @@
 from django.urls import re_path, path
-from audit_app.views.api.edit_log import ResourceEditLogAPIView
+from arches_auditing.views.api.edit_log import ResourceEditLogAPIView
 
 urlpatterns = [
     path(

@@ -9,7 +9,7 @@ export const fetchResourceEditLog = async (
 ): Promise<{ edits: EditLogEntry[], total_count: number}> => {
 
     let url = "/api/audit/edit-log"
-    // const url = generateArchesURL("audit_app:api-audit-edit-log", {
+    // const url = generateArchesURL("arches_auditing:api-audit-edit-log", {
     //     resourceid: resourceId,
     // });
 
