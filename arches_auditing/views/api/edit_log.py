@@ -1,6 +1,7 @@
 import uuid
+import csv
 
-from django.http import JsonResponse
+from django.http import HttpResponse
 from django.utils.translation import gettext as _
 from django.views.generic import View
 
@@ -17,11 +18,41 @@ from arches_auditing.const import EDIT_TYPE_LABELS
 
 
 class ResourceEditLogAPIView(View):
+
+    def export(self, queryset):
+        response = HttpResponse(content_type='text/csv; charset=utf-8-sig')
+        response['Content-Disposition'] = 'attachment; filename="audit_log.csv"'
+        writer = csv.writer(response)
+        writer.writerow([
+            "Resource ID", "Resource Name", "Graph Name", "Action Type", 
+            "Action Label", "Timestamp", "User Username", "Card Name"
+        ])
+
+        for edit in queryset[:2000]:
+            res_name = edit.resource_name if (edit.resource_name and edit.resource_name != "Undefined") else "None"
+            action_label = str(EDIT_TYPE_LABELS.get(edit.edittype, edit.edittype))
+            timestamp_str = edit.timestamp.isoformat() if edit.timestamp else ""
+            card_name = edit.card_name if edit.card_name else "N/A"
+            
+            writer.writerow([
+                str(edit.resourceinstanceid),
+                res_name,
+                edit.graph_name or "", 
+                edit.edittype,
+                action_label,
+                timestamp_str,
+                edit.user_username,
+                card_name
+            ])
+
+        return(response)
+
     def get(self, request):
+        print("HERE", request.user)
         # TO DO - ADD SPECIFIC PERMISSION
         if not request.user.is_authenticated:
 
-            return JsonResponse(
+            return JSONResponse(
                 {"message": _("Authentication required.")},
                 status=403,
             )
@@ -116,6 +147,9 @@ class ResourceEditLogAPIView(View):
         permitted_edits = filtered_edits.filter(
             Q(nodegroupid__isnull=True) | Q(nodegroupid="") | ~Q(nodegroupid__in=unauthorized_nodegroup_ids)
         )
+
+        if request.GET.get('export') == 'true':
+            return self.export(permitted_edits)
 
         ## pagination
 

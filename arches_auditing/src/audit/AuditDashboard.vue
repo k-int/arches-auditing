@@ -105,6 +105,7 @@
         try {
             const [responseData] = await Promise.all([
                 fetchResourceEditLog({
+                    export: false,
                     offset: first.value,
                     limit: rows.value,
                     sortField: sortField.value,
@@ -118,8 +119,6 @@
                 }),
                 new Promise(resolve => setTimeout(resolve, 600))
             ]);
-
-            if (!responseData.ok) throw new Error("Edit log data retrieval failed.");
 
             edits.value = responseData.edits;
             totalRecords.value = responseData.total_count;
@@ -186,6 +185,50 @@
             }
         }
     };
+
+    const handleExport = async () => {
+
+        try {
+            const params = new URLSearchParams({
+                export: 'true',
+                sortField: sortField.value || 'timestamp',
+                sortOrder: sortOrder.value === 1 ? 'asc' : 'desc',
+                userFilter: filters.value.user_username.value || '',
+                actionFilter: filters.value.edittype_label.value || '',
+                resourceidFilter: filters.value.resourceinstanceid.value || '',
+                resourceNameFilter: filters.value.resource_name.value || '',
+                graphNameFilter: filters.value.graph_name.value || '',
+                cardNameFilter: filters.value.card_name.value || ''
+            });
+
+            const response = await fetch(`/api/audit/edit-log?${params.toString()}`, {
+                method: 'GET',
+                credentials: 'include'
+            });
+
+            if (!response.ok) throw new Error("Export download request failed.");
+
+            const csvBlob = await response.blob();
+            const blobUrl = window.URL.createObjectURL(csvBlob);
+
+            const downloadLink = document.createElement('a');
+            downloadLink.href = blobUrl;
+            downloadLink.setAttribute('download', `audit_log_export_${new Date().toISOString().split('T')[0]}.csv`);
+            downloadLink.style.display = 'none';
+            
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            
+            document.body.removeChild(downloadLink);
+            window.URL.revokeObjectURL(blobUrl);
+
+        } catch (caughtError) {
+            console.log("Unable to fetch edit history: ", caughtError)
+
+        }
+
+
+    }
 
 </script>
 
@@ -366,10 +409,11 @@
 
             <div class="table-actions-bar">
                 <Button 
-                    raised 
+                    raised
                     size="large"
                     severity="secondary"
                     class="export-csv-btn"
+                    @click=handleExport
                     >
                     <span>Export to CSV</span>
                     <i class="pi pi-download" style="font-size: 2rem"></i>
