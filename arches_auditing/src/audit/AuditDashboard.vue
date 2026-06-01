@@ -119,6 +119,8 @@
                 new Promise(resolve => setTimeout(resolve, 600))
             ]);
 
+            if (!responseData.ok) throw new Error("Edit log data retrieval failed.");
+
             edits.value = responseData.edits;
             totalRecords.value = responseData.total_count;
             actionCounts.value = responseData.action_counts;
