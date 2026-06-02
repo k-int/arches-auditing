@@ -1,12 +1,12 @@
 import type {
-    EditLogEntry, FetchEditLogParams
-} from "@/audit/types";
+    ActionCounts, EditLogEntry, FetchEditLogParams
+} from "./types";
 
 // import { generateArchesURL } from "@/arches/utils/generate-arches-url";
 
 export const fetchResourceEditLog = async (
     params?: FetchEditLogParams
-): Promise<{ edits: EditLogEntry[], total_count: number}> => {
+): Promise<{ edits: EditLogEntry[], total_count: number, action_counts: ActionCounts}> => {
 
     let url = "/api/audit/edit-log"
     // const url = generateArchesURL("arches_auditing:api-audit-edit-log", {
@@ -18,11 +18,11 @@ export const fetchResourceEditLog = async (
 
         for (const [key, value] of Object.entries(params)) {
             if (value !== null && value !== undefined && value !== "") {
-                activeParams[key] = value;
+                activeParams[key as keyof FetchEditLogParams] = value;
             }
         }
 
-        const queryString = new URLSearchParams(activeParams).toString();
+        const queryString = new URLSearchParams(activeParams.toString());
     
         if (queryString) url += `?${queryString}`;
     }

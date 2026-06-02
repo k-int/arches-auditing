@@ -1,6 +1,12 @@
 <script setup lang="ts">
     import { onMounted, ref } from "vue";
-    import DataTable, { type DataTableStateEvent } from 'primevue/datatable';
+
+    import DataTable, { 
+        type DataTableSortEvent, 
+        type DataTablePageEvent, 
+        type DataTableFilterEvent 
+    } from 'primevue/datatable';
+
     import Column from 'primevue/column';
     import Card from 'primevue/card';
     import InputText from 'primevue/inputtext';
@@ -9,46 +15,48 @@
     import Skeleton from 'primevue/skeleton';
     import Panel from 'primevue/panel';
     import Button from 'primevue/button';
-    import 'primeicons/primeicons.css';
+    import { FilterMatchMode } from '@primevue/core/api';
 
     import {
         fetchResourceEditLog,
-    } from "@/audit/api.ts";
+    } from "./api.ts";
 
-    import { EditLogEntry, ActionCounts, Filters } from "@/audit/types.ts";
+    import { EditLogEntry, ActionCounts, Filters } from "./types.ts";
 
     const isLoading = ref(true);
-    const edits = ref([] as EditLogEntry[]);
+
+    const edits = ref<EditLogEntry[]>([])
+    const actionCounts = ref<ActionCounts>({});
 
     const sortField = ref<string | null>('timestamp');
     const sortOrder = ref<number | null>(-1);
     const first = ref(0);
     const rows = ref(5); 
     const totalRecords = ref(0);
-    const actionCounts = ref({} as ActionCounts);
+
 
     const selectedEditLogId = ref<string | null>(null);
-    const selectedEditLogOldValue = ref(null as Record<string, any> | null);
-    const selectedEditLogNewValue = ref(null as Record<string, any> | null);
+    const selectedEditLogOldValue = ref<string | null>(null);
+    const selectedEditLogNewValue = ref<string | null>(null);
 
     const filters = ref<Filters>({
-        resourceinstanceid: {value: null},
-        resource_name: {value: null},
-        graph_name: {value: null},
-        user_username: { value: null },
-        edittype_label: { value: null },
-        card_name: { value: null },
-        timestamp: { value: null }
+        resourceinstanceid: {value: null, matchMode: FilterMatchMode.CONTAINS},
+        resource_name: {value: null, matchMode: FilterMatchMode.CONTAINS},
+        graph_name: {value: null, matchMode: FilterMatchMode.CONTAINS},
+        user_username: { value: null, matchMode: FilterMatchMode.CONTAINS},
+        edittype_label: { value: null, matchMode: FilterMatchMode.CONTAINS},
+        card_name: { value: null, matchMode: FilterMatchMode.CONTAINS},
+        timestamp: { value: null, matchMode: FilterMatchMode.CONTAINS}
     });
 
-    const actionOptions = ref([
+    const actionOptions = [
         { label: 'Create Resource', value: 'create' },
         { label: 'Delete Resource', value: 'delete' },
         { label: 'Delete Tile', value: 'tile delete' },
         { label: 'Create Tile', value: 'tile create' },
         { label: 'Update Tile', value: 'tile edit' },
         { label: 'Bulk Create Tile', value: 'bulk_create' },
-    ]);
+    ];
 
     const dateTimeFormatter = new Intl.DateTimeFormat(undefined, {
         dateStyle: "medium",
@@ -149,19 +157,19 @@
         return dateTimeFormatter.format(new Date(timestamp));
     }
 
-    const onChange = (event: DataTableStateEvent) => {
+    const onChange = (event: DataTableSortEvent | DataTablePageEvent | DataTableFilterEvent) => {
         if (event.sortField === "edittype_label") {
             sortField.value = "edittype";
         }
         else {
-            sortField.value = event.sortField;
+            sortField.value = event.sortField ? String(event.sortField) : null;
         }
         
-        sortOrder.value = event.sortOrder;
-        first.value = event.first;
-        rows.value = event.rows;
+        sortOrder.value = event.sortOrder ?? -1;
+        first.value = event.first ?? 0;
+        rows.value = event.rows ?? 5;
 
-        filters.value = event.filters;
+        filters.value = event.filters as any;
 
         selectedEditLogId.value = null;
         selectedEditLogOldValue.value = null;
@@ -175,8 +183,8 @@
 
         if (isChecked) {
             selectedEditLogId.value = rowData.editlogid;
-            selectedEditLogOldValue.value = rowData.old_value;
-            selectedEditLogNewValue.value = rowData.new_value;
+            selectedEditLogOldValue.value = JSON.stringify(rowData.old_value, null, 2);
+            selectedEditLogNewValue.value = JSON.stringify(rowData.new_value, null, 2);
         } else {
             if (selectedEditLogId.value === rowData.editlogid) {
                 selectedEditLogId.value = null;
@@ -423,12 +431,12 @@
             <template v-if="selectedEditLogOldValue || selectedEditLogNewValue">
                 <div class="json-value-row">
                     <Panel header="Old Value" class="json-value-container">
-                        <pre v-if="selectedEditLogOldValue && Object.keys(selectedEditLogOldValue).length > 0">{{ JSON.stringify(selectedEditLogOldValue, null, 2) }}</pre>
+                        <pre v-if="selectedEditLogOldValue && Object.keys(selectedEditLogOldValue).length > 0">{{ selectedEditLogOldValue }}</pre>
                         <p v-else>No previous value</p>
                     </Panel>
 
                     <Panel header="New Value" class="json-value-container">
-                        <pre v-if="selectedEditLogNewValue">{{ JSON.stringify(selectedEditLogNewValue, null, 2) }}</pre>
+                        <pre v-if="selectedEditLogNewValue">{{ selectedEditLogNewValue }}</pre>
                         <p v-else>No new value</p>
                     </Panel>
                 </div>
@@ -439,6 +447,8 @@
 </template>
 
 <style scoped>
+
+    @import 'primeicons/primeicons.css';
 
     .audit-app-page {
         background-color: white;

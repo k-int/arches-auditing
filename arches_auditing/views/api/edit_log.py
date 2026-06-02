@@ -48,7 +48,6 @@ class ResourceEditLogAPIView(View):
         return(response)
 
     def get(self, request):
-        print("HERE", request.user)
         # TO DO - ADD SPECIFIC PERMISSION
         if not request.user.is_authenticated:
 
@@ -113,6 +112,7 @@ class ResourceEditLogAPIView(View):
             sorted_edits = annotated_edits.order_by('-timestamp')
 
         ## filtering
+
 
         filtered_edits = sorted_edits
 

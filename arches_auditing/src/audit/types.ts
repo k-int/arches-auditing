@@ -1,6 +1,6 @@
 export interface EditLogEntry {
     editlogid: string;
-    transactionid: string | null;
+    transactionid: string;
     edittype: string;
     edittype_label: string;
     timestamp: string;
@@ -13,26 +13,33 @@ export interface EditLogEntry {
     tileinstanceid: string | null;
     card_name: string | null;
     note: string | null;
-    old_value: Record<string, any> | null;
-    new_value: Record<string, any> | null;
+    old_value: string | null;
+    new_value: string | null;
 }
 
 export interface FetchEditLogParams {
+    export: boolean;
     offset: number;
     limit: number;
     sortField: string | null;
     sortOrder: 'asc' | 'desc' | null;
     searchUser?: string | null;
+    userFilter?: string | null;
+    actionFilter?: string | null;
+    resourceidFilter?: string | null;
+    resourceNameFilter?: string | null;
+    graphNameFilter?: string | null;
+    cardNameFilter?: string | null;
 }
 
 export interface Filters {
-    resourceinstanceid:  {value: string | null};
-    resource_name:  {value: string | null};
-    graph_name:  {value: string | null};
-    user_username:  {value: string | null};
-    edittype_label:  {value: string | null};
-    card_name:  {value: string | null};
-    timestamp: {value: Date | null};
+    resourceinstanceid: { value: string | null; matchMode: string };
+    resource_name:      { value: string | null; matchMode: string };
+    graph_name:         { value: string | null; matchMode: string };
+    user_username:      { value: string | null; matchMode: string };
+    edittype_label:     { value: string | null; matchMode: string };
+    card_name:          { value: string | null; matchMode: string };
+    timestamp:          { value: Date | null;   matchMode: string };
 }
 
 export interface ActionCounts {
@@ -43,7 +50,3 @@ export interface ActionCounts {
     "tile edit"?: number,
     "bulk_create"?: number
 }
-
-import type { EDIT, VIEW } from "@/audit/constants.ts";
-
-export type DataComponentMode = typeof EDIT | typeof VIEW;
