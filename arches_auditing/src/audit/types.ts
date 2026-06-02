@@ -32,6 +32,8 @@ export interface FetchEditLogParams {
     cardNameFilter?: string | null;
 }
 
+import type { DataTableFilterMetaData } from 'primevue/datatable';
+
 export interface Filters {
     resourceinstanceid: { value: string | null; matchMode: string };
     resource_name:      { value: string | null; matchMode: string };
@@ -40,6 +42,7 @@ export interface Filters {
     edittype_label:     { value: string | null; matchMode: string };
     card_name:          { value: string | null; matchMode: string };
     timestamp:          { value: Date | null;   matchMode: string };
+    [key: string]: DataTableFilterMetaData | any;
 }
 
 export interface ActionCounts {
