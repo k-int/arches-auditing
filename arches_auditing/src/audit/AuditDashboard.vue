@@ -30,7 +30,7 @@
 
     const sortField = ref<string | null>('timestamp');
     const sortOrder = ref<number | null>(-1);
-    const first = ref(0);
+    const firstRow = ref(0);
     const rows = ref(5); 
     const totalRecords = ref(0);
 
@@ -114,7 +114,7 @@
             const [responseData] = await Promise.all([
                 fetchResourceEditLog({
                     export: false,
-                    offset: first.value,
+                    offset: firstRow.value,
                     limit: rows.value,
                     sortField: sortField.value,
                     sortOrder: sortOrder.value === 1 ? 'asc' : sortOrder.value === -1 ? 'desc' : null,
@@ -166,7 +166,7 @@
         }
         
         sortOrder.value = event.sortOrder ?? -1;
-        first.value = event.first ?? 0;
+        firstRow.value = event.first ?? 0;
         rows.value = event.rows ?? 5;
 
         filters.value = event.filters as any;
@@ -288,7 +288,7 @@
                     :loading="isLoading" 
                     :paginator="true" 
                     :rows="rows"
-                    :first="first"
+                    :first="firstRow"
                     :totalRecords="totalRecords"
                     @sort="handleTableChange"
                     @page="handleTableChange"
