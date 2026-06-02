@@ -157,7 +157,7 @@
         return dateTimeFormatter.format(new Date(timestamp));
     }
 
-    const onChange = (event: DataTableSortEvent | DataTablePageEvent | DataTableFilterEvent) => {
+    const handleTableChange = (event: DataTableSortEvent | DataTablePageEvent | DataTableFilterEvent) => {
         if (event.sortField === "edittype_label") {
             sortField.value = "edittype";
         }
@@ -290,9 +290,9 @@
                     :rows="rows"
                     :first="first"
                     :totalRecords="totalRecords"
-                    @sort="onChange"
-                    @page="onChange"
-                    @filter="onChange"
+                    @sort="handleTableChange"
+                    @page="handleTableChange"
+                    @filter="handleTableChange"
                     class="edit-log-table"
                     >
                     

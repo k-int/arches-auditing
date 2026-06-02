@@ -14,16 +14,16 @@ export const fetchResourceEditLog = async (
     // });
 
     if(params) {
-        const activeParams = {} as Partial<FetchEditLogParams>;
+        const activeParams: Record<string, string> = {};
 
         for (const [key, value] of Object.entries(params)) {
             if (value !== null && value !== undefined && value !== "") {
-                activeParams[key as keyof FetchEditLogParams] = value;
+                activeParams[key] = String(value);
             }
         }
 
-        const queryString = new URLSearchParams(activeParams.toString());
-    
+        const queryString = new URLSearchParams(activeParams).toString();
+
         if (queryString) url += `?${queryString}`;
     }
 
