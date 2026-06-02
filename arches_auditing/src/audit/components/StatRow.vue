@@ -34,7 +34,7 @@
 
                 <template #content>
                     <p class="stat-content">
-                        {{ card.getValue() }}
+                        {{ card.value }}
                     </p>
                 </template>
             </Card>

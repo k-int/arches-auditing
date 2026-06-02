@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import { onMounted, ref } from "vue";
+    import { onMounted, ref, computed } from "vue";
 
     import DataTable, { 
         type DataTableSortEvent, 
@@ -50,22 +50,22 @@
         timestamp: { value: null, matchMode: FilterMatchMode.CONTAINS}
     });
 
-    const statCardsConfig = ref([
+    const statCardsConfig = computed(() => [
         {
             title: "Total Actions",
-            getValue: () => totalRecords.value ?? 0
+            value: totalRecords.value ?? 0
         },
         {
             title: "Resources Created",
-            getValue: () => actionCounts.value?.create ?? 0
+            value: actionCounts.value?.create ?? 0
         },
         {
             title: "Resources Deleted",
-            getValue: () => actionCounts.value?.delete ?? 0
+            value: actionCounts.value?.delete ?? 0
         },
         {
             title: "Resources Edited",
-            getValue: () => (
+            value: (
                 (actionCounts.value?.["tile edit"] ?? 0) + 
                 (actionCounts.value?.["tile create"] ?? 0) + 
                 (actionCounts.value?.["tile delete"] ?? 0)
@@ -73,17 +73,17 @@
         },
         {
             title: "Tiles Created",
-            getValue: () => actionCounts.value?.["tile create"] ?? 0
+            value: actionCounts.value?.["tile create"] ?? 0
         },
         {
             title: "Tiles Deleted",
-            getValue: () => actionCounts.value?.["tile delete"] ?? 0
+            value: actionCounts.value?.["tile delete"] ?? 0
         },
         {
             title: "Tiles Edited",
-            getValue: () => actionCounts.value?.["tile edit"] ?? 0
+            value: actionCounts.value?.["tile edit"] ?? 0
         },
-    ])
+    ]);
 
     const debouncedFilter = debounce((callback: () => void) => {
         callback();
