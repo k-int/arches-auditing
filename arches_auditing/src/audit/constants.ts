@@ -1,9 +1,8 @@
-export const EDIT = "edit";
-export const VIEW = "view";
-
-export const ERROR = "error";
-export const SUCCESS = "success";
-export const DANGER = "danger";
-
-export const DEFAULT_TOAST_LIFE = 5000;
-export const DEFAULT_ERROR_TOAST_LIFE = 8000;
+export const actionOptions = [
+    { label: 'Create Resource', value: 'create' },
+    { label: 'Delete Resource', value: 'delete' },
+    { label: 'Delete Tile', value: 'tile delete' },
+    { label: 'Create Tile', value: 'tile create' },
+    { label: 'Update Tile', value: 'tile edit' },
+    { label: 'Bulk Create Tile', value: 'bulk_create' },
+];
