@@ -17,6 +17,7 @@
     import Button from 'primevue/button';
     import { FilterMatchMode } from '@primevue/core/api';
 
+    import { formatTimestamp, debounce, isRowInspectable } from "./utils.ts";
     import {
         fetchResourceEditLog,
     } from "./api.ts";
@@ -28,13 +29,12 @@
 
     const edits = ref<EditLogEntry[]>([])
     const actionCounts = ref<ActionCounts>({});
+    const totalRecords = ref(0);
 
     const sortField = ref<string | null>('timestamp');
     const sortOrder = ref<number | null>(-1);
     const firstRow = ref(0);
     const rows = ref(5); 
-    const totalRecords = ref(0);
-
 
     const selectedEditLogId = ref<string | null>(null);
     const selectedEditLogOldValue = ref<string | null>(null);
@@ -49,15 +49,6 @@
         card_name: { value: null, matchMode: FilterMatchMode.CONTAINS},
         timestamp: { value: null, matchMode: FilterMatchMode.CONTAINS}
     });
-
-    const dateTimeFormatter = new Intl.DateTimeFormat(undefined, {
-        dateStyle: "medium",
-        timeStyle: "medium",
-    });
-
-    const isRowInspectable = (rowData: EditLogEntry) => {
-        return tileChangeEdits.includes(rowData.edittype_label);
-    };
 
     const statCardsConfig = ref([
         {
@@ -94,6 +85,10 @@
         },
     ])
 
+    const debouncedFilter = debounce((callback: () => void) => {
+        callback();
+    }, 800);
+
     onMounted(loadEditLog);
     
     async function loadEditLog() {
@@ -128,23 +123,6 @@
         } finally {
             isLoading.value = false;
         }
-    }
-
-    const debounce = (fn: Function, delay: number) => {
-        let timeoutId: any;
-        
-        return (...args: any[]) => {
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(() => fn(...args), delay);
-        };
-    }
-
-    const debouncedFilter = debounce((callback: () => void) => {
-        callback();
-    }, 800);
-
-    const formatTimestamp = (timestamp: string) => {
-        return dateTimeFormatter.format(new Date(timestamp));
     }
 
     const handleTableChange = (event: DataTableSortEvent | DataTablePageEvent | DataTableFilterEvent) => {
