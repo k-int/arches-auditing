@@ -13,7 +13,6 @@
     import Select from 'primevue/select';
     import DatePicker from 'primevue/datepicker';
     import Skeleton from 'primevue/skeleton';
-    import Panel from 'primevue/panel';
     import Button from 'primevue/button';
     import { FilterMatchMode } from '@primevue/core/api';
 
@@ -24,6 +23,8 @@
 
     import { EditLogEntry, ActionCounts, Filters } from "./types.ts";
     import { actionOptions } from "./constants.ts";
+
+    import EditLogComparison from "./components/EditLogComparison.vue";
 
     const isLoading = ref(true);
 
@@ -396,19 +397,10 @@
                 </Button>
             </div>
 
-            <template v-if="selectedEditLogOldValue || selectedEditLogNewValue">
-                <div class="json-value-row">
-                    <Panel header="Old Value" class="json-value-container">
-                        <pre v-if="selectedEditLogOldValue && Object.keys(selectedEditLogOldValue).length > 0">{{ selectedEditLogOldValue }}</pre>
-                        <p v-else>No previous value</p>
-                    </Panel>
-
-                    <Panel header="New Value" class="json-value-container">
-                        <pre v-if="selectedEditLogNewValue">{{ selectedEditLogNewValue }}</pre>
-                        <p v-else>No new value</p>
-                    </Panel>
-                </div>
-            </template>
+            <EditLogComparison  v-if="selectedEditLogOldValue || selectedEditLogNewValue"
+                :old-value="selectedEditLogOldValue"
+                :new-value="selectedEditLogNewValue"
+            />
 
         </div>
     </div>
@@ -511,30 +503,8 @@
         font-size: 1.3rem;
     }
 
-    .json-value-row{
-        display: flex;
-        justify-content: space-between;
-        /* border: 1px solid pink; */
-        margin-top: 75px;
-    }
-
-    .json-value-container {
-        /* border: 1px solid green; */
-        height: 450px;
-        width: 48%;
-        overflow: auto;
-    }
-
-    .json-value-container :deep(.p-panel-title) {
-        font-size: 2rem;
-    }
-
     .table-checkbox {
         transform: scale(1.2);
-    }
-
-    pre {
-        background-color: #f8fafc; 
     }
 
 </style>
