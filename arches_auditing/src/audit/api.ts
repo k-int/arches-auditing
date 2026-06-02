@@ -2,16 +2,11 @@ import type {
     ActionCounts, EditLogEntry, FetchEditLogParams
 } from "./types";
 
-// import { generateArchesURL } from "@/arches/utils/generate-arches-url";
-
 export const fetchResourceEditLog = async (
     params?: FetchEditLogParams
 ): Promise<{ edits: EditLogEntry[], total_count: number, action_counts: ActionCounts}> => {
 
     let url = "/api/audit/edit-log"
-    // const url = generateArchesURL("arches_auditing:api-audit-edit-log", {
-    //     resourceid: resourceId,
-    // });
 
     if(params) {
         const activeParams: Record<string, string> = {};
