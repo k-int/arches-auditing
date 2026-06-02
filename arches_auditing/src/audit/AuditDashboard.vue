@@ -260,10 +260,12 @@
         justify-content: flex-start;
         align-items: center;
         flex-direction: column;
-        width: 100vw;
         height: 100vh;
-        overflow-y: scroll;
+        overflow-y: auto;
         font-size: 1.5rem;
+        box-sizing: border-box;
+        margin: 0px;
+        width: calc(100vw - 3%);
     }
 
     .dashboard-container {
