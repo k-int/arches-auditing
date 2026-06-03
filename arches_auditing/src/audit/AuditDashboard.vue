@@ -91,6 +91,10 @@
 
         isLoading.value = true;
 
+        const dateRange = filters.value.timestamp.value;
+        const fromDate = dateRange && dateRange[0] ? dateRange[0].toISOString(): null;
+        const toDate = dateRange && dateRange[1] ? dateRange[1].toISOString(): null;
+
         try {
             const [responseData] = await Promise.all([
                 fetchResourceEditLog({
@@ -104,7 +108,9 @@
                     resourceidFilter: filters.value.resourceinstanceid.value,
                     resourceNameFilter: filters.value.resource_name.value,
                     graphNameFilter: filters.value.graph_name.value,
-                    cardNameFilter: filters.value.card_name.value
+                    cardNameFilter: filters.value.card_name.value,
+                    dateTimeFromFilter: fromDate,
+                    dateTimeToFilter: toDate,
                 }),
                 new Promise(resolve => setTimeout(resolve, 600))
             ]);
@@ -160,6 +166,10 @@
 
     const handleExport = async () => {
 
+        const dateRange = filters.value.timestamp.value;
+        const fromDate = dateRange && dateRange[0] ? dateRange[0].toISOString(): null;
+        const toDate = dateRange && dateRange[1] ? dateRange[1].toISOString(): null;
+
         try {
             const params = new URLSearchParams({
                 export: 'true',
@@ -170,7 +180,9 @@
                 resourceidFilter: filters.value.resourceinstanceid.value || '',
                 resourceNameFilter: filters.value.resource_name.value || '',
                 graphNameFilter: filters.value.graph_name.value || '',
-                cardNameFilter: filters.value.card_name.value || ''
+                cardNameFilter: filters.value.card_name.value || '',
+                dateTimeFromFilter: fromDate || '',
+                dateTimeToFilter: toDate || ''
             });
 
             const response = await fetch(`/api/audit/edit-log?${params.toString()}`, {

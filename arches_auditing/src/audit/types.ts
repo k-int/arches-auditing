@@ -30,6 +30,8 @@ export interface FetchEditLogParams {
     resourceNameFilter?: string | null;
     graphNameFilter?: string | null;
     cardNameFilter?: string | null;
+    dateTimeFromFilter?: string | null;
+    dateTimeToFilter?: string | null;
 }
 
 import type { DataTableFilterMetaData } from 'primevue/datatable';
@@ -41,7 +43,7 @@ export interface Filters {
     user_username:      { value: string | null; matchMode: string };
     edittype_label:     { value: string | null; matchMode: string };
     card_name:          { value: string | null; matchMode: string };
-    timestamp:          { value: Date | null;   matchMode: string };
+    timestamp:          { value: Date[] | null;   matchMode: string };
     [key: string]: DataTableFilterMetaData | any;
 }
 
