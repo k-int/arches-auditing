@@ -69,6 +69,7 @@
         height: 100%;
         width: 130px;
         text-align: center;
+        background-color: #f7fafd;
     }
 
     .stat-title {
