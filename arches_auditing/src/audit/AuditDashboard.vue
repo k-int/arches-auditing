@@ -12,7 +12,7 @@
 
     import { debounce } from "./utils.ts";
     import {
-        fetchResourceEditLog,
+        fetchResourceEditLog, fetchGraphs
     } from "./api.ts";
 
     import { EditLogEntry, ActionCounts, Filters } from "./types.ts";
@@ -45,6 +45,9 @@
         card_name: { value: null, matchMode: FilterMatchMode.CONTAINS},
         timestamp: { value: null, matchMode: FilterMatchMode.CONTAINS}
     });
+
+    const graphOptions = ref<string[]>([]);
+    const isGraphsLoading = ref(false);
 
     const statCardsConfig = computed(() => [
         {
@@ -85,7 +88,10 @@
         callback();
     }, 800);
 
-    onMounted(loadEditLog);
+    onMounted(() => {
+        loadEditLog();
+        loadGraphNames();
+    });
     
     async function loadEditLog() {
 
@@ -124,6 +130,24 @@
 
         } finally {
             isLoading.value = false;
+        }
+    }
+
+    async function loadGraphNames() {
+        isGraphsLoading.value = true;
+        try {
+            const data = await fetchGraphs();
+
+            const graphsNames = data
+                .filter(graph => graph.isresource && graph.name !== "Arches System Settings")
+                .map(graph => graph.name)
+
+            graphOptions.value = graphsNames;
+
+        } catch (caughtError) {
+            console.error("Unable to load graph names for filters:", caughtError);
+        } finally {
+            isGraphsLoading.value = false;
         }
     }
 
@@ -228,6 +252,8 @@
             <div class="edit-log-table-container">
                 <EditLogTable
                     :is-loading="isLoading"
+                    :isGraphsLoading="isGraphsLoading"
+                    :graphOptions="graphOptions"
                     :edits="edits"
                     :total-records="totalRecords"
                     :rows="rows"

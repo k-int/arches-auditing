@@ -1,5 +1,5 @@
 import type {
-    ActionCounts, EditLogEntry, FetchEditLogParams
+    ActionCounts, EditLogEntry, FetchEditLogParams, GraphObject
 } from "./types";
 
 export const fetchResourceEditLog = async (
@@ -28,3 +28,14 @@ export const fetchResourceEditLog = async (
     if (!response.ok) throw new Error(parsed.message || response.statusText);
     return parsed;
 };
+
+export const fetchGraphs = async (): Promise<GraphObject[]> => {
+    let url = "/graphs"
+
+    const response = await fetch(url);
+    const parsed = await response.json();
+
+    if (!response.ok) throw new Error(parsed.message || response.statusText);
+    return parsed;
+
+}

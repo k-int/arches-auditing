@@ -12,7 +12,7 @@
     import { formatTimestamp, isRowInspectable } from "../utils.ts";
 
     import { actionOptions } from "../constants.ts";
-    import { EditLogEntry, Filters } from "../types.ts";
+    import { EditLogEntry, Filters, GraphObject } from "../types.ts";
 
 
     defineProps<{
@@ -21,6 +21,8 @@
         totalRecords: number;
         rows: number;
         selectedEditLogId: string | null;
+        isGraphsLoading: boolean;
+        graphOptions: string[];
 
         handleTableChange: (event: any) => void;
         handleCheckboxChange: (event: Event, rowData: EditLogEntry) => void;
@@ -101,20 +103,15 @@
 
             <Column field="graph_name" header="Graph Name" sortable filter :showFilterMenu="false">
                 <template #filter="{ filterModel, filterCallback }">
-                    <IconField iconPosition="right">
-                        <InputText 
-                            v-model="filterModel.value" 
-                            type="text" 
-                            @input="debouncedFilter(filterCallback)"
-                            placeholder="Search Graph Name..." 
-                            class="filter-box"
-                        />
-                        <InputIcon 
-                            v-if="filterModel.value" 
-                            class="pi pi-times clear-filter-icon" 
-                            @click="filterModel.value = null; filterCallback();"
-                        />
-                    </IconField>
+                    <Select
+                        v-model="filterModel.value" 
+                        :options="graphOptions"
+                        filter
+                        placeholder="Search Graph Name..." 
+                        class="filter-box"
+                        @change="filterCallback()"
+                        showClear
+                    />
                 </template>
             </Column>
 

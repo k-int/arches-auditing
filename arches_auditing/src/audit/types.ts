@@ -55,3 +55,9 @@ export interface ActionCounts {
     "tile edit"?: number,
     "bulk_create"?: number
 }
+
+export interface GraphObject {
+    name: string;
+    graphid: string;
+    [key: string]: any; 
+}
