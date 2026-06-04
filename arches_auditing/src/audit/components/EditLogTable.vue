@@ -103,13 +103,14 @@
                     <DatePicker 
                         :modelValue="filterModel ? filterModel.value : null"
                         :manualInput="true"
-                        @update:modelValue="(val) => { if (filterModel) filterModel.value = val; }"
+                        @update:modelValue="(val) => { if (filterModel) filterModel.value = val;}"
                         @date-select="filterCallback()"
-                        @clear="filterCallback()"
+                        @clear-click="() => {if (filterModel) filterModel.value = null; filterCallback();}"
                         selectionMode="range" 
                         dateFormat="yy-mm-dd"
                         placeholder="Select Date Range"
                         showClear
+                        showButtonBar
                         class="filter-box"
                     />
                 </template>
