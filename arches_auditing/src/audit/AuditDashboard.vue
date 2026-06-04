@@ -249,22 +249,20 @@
                 :stat-cards-config="statCardsConfig"
             />
 
-            <div class="edit-log-table-container">
-                <EditLogTable
-                    :is-loading="isLoading"
-                    :isGraphsLoading="isGraphsLoading"
-                    :graphOptions="graphOptions"
-                    :edits="edits"
-                    :total-records="totalRecords"
-                    :rows="rows"
-                    :selected-edit-log-id="selectedEditLogId"
-                    :handle-table-change="handleTableChange"
-                    :handle-checkbox-change="handleCheckboxChange"
-                    :debounced-filter="debouncedFilter"
-                    v-model:filters="filters"
-                    v-model:firstRow="firstRow"
-                />
-            </div>
+            <EditLogTable
+                :is-loading="isLoading"
+                :isGraphsLoading="isGraphsLoading"
+                :graphOptions="graphOptions"
+                :edits="edits"
+                :total-records="totalRecords"
+                :rows="rows"
+                :selected-edit-log-id="selectedEditLogId"
+                :handle-table-change="handleTableChange"
+                :handle-checkbox-change="handleCheckboxChange"
+                :debounced-filter="debouncedFilter"
+                v-model:filters="filters"
+                v-model:firstRow="firstRow"
+            />
 
             <div class="table-actions-bar">
                 <Button 
@@ -321,12 +319,6 @@
         padding: 12px 24px;
         font-size: 1.6rem;
         margin-top: 20px;
-    }
-
-    .edit-log-table-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
     }
 
 </style>

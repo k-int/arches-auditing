@@ -53,6 +53,8 @@
             @sort="handleTableChange"
             @page="handleTableChange"
             @filter="handleTableChange"
+            resizableColumns
+            columnResizeMode="fit"
             class="edit-log-table"
             >
             
@@ -74,7 +76,7 @@
                             showClear
                         />
                         <InputIcon 
-                            v-if="filterModel.value" 
+                            v-show="filterModel.value" 
                             class="pi pi-times clear-filter-icon" 
                             @click="filterModel.value = null; filterCallback();"
                         />
@@ -93,7 +95,7 @@
                             class="filter-box"
                         />
                         <InputIcon 
-                            v-if="filterModel.value" 
+                            v-show="filterModel.value" 
                             class="pi pi-times clear-filter-icon" 
                             @click="filterModel.value = null; filterCallback();"
                         />
@@ -148,7 +150,7 @@
                             class="filter-box"
                         />
                         <InputIcon 
-                            v-if="filterModel.value" 
+                            v-show="filterModel.value" 
                             class="pi pi-times clear-filter-icon" 
                             @click="filterModel.value = null; filterCallback();"
                         />
@@ -182,7 +184,7 @@
                             class="filter-box"
                         />
                         <InputIcon 
-                            v-if="filterModel.value" 
+                            v-show="filterModel.value" 
                             class="pi pi-times clear-filter-icon" 
                             @click="filterModel.value = null; filterCallback();"
                         />
@@ -210,6 +212,16 @@
 
 <style scoped>
 
+    .edit-log-table-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .edit-log-table {
+        width: 100%;
+    }
+
     .filter-box :deep(.p-datepicker-input) {
         font-size: 1.3rem;
     }
@@ -236,10 +248,12 @@
     }
 
     .resource-link {
-        color: blue;
+        color: #579ddb;
+        transition: color 0.15s ease
     }
 
     .resource-link:hover {
+        color: #4a85ba;
         text-decoration: underline;
     }
 
