@@ -3,6 +3,8 @@ import csv
 
 from django.http import HttpResponse
 from django.utils.translation import gettext as _
+from django.utils.dateparse import parse_datetime
+from datetime import timedelta
 from django.views.generic import View
 
 from arches.app.models import models
@@ -73,6 +75,11 @@ class ResourceEditLogAPIView(View):
         action_filter = request.GET.get('actionFilter')
         resource_id_filter = request.GET.get('resourceidFilter')
         card_name_filter = request.GET.get('cardNameFilter')
+        date_from_filter = request.GET.get('dateTimeFromFilter')
+        date_to_filter = request.GET.get('dateTimeToFilter')
+
+        start_date_filter = parse_datetime(date_from_filter) if date_from_filter else None
+        end_date_filter = parse_datetime(date_to_filter) + timedelta(days=1) if date_to_filter else None
 
         ## get all edits 
         
@@ -133,6 +140,12 @@ class ResourceEditLogAPIView(View):
 
         if card_name_filter:
             filtered_edits = filtered_edits.filter(card_name__icontains=card_name_filter)
+
+        if start_date_filter:
+            filtered_edits = filtered_edits.filter(timestamp__gte=start_date_filter)
+
+        if end_date_filter:
+            filtered_edits = filtered_edits.filter(timestamp__lte=end_date_filter)
 
         ## check node permissions
 
