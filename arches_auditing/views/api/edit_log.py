@@ -17,8 +17,10 @@ from django.db.models.functions import Cast
 from arches.app.utils.response import JSONErrorResponse, JSONResponse
 
 from arches_auditing.const import EDIT_TYPE_LABELS
+from django.utils.decorators import method_decorator
+from arches.app.utils.decorators import can_edit_resource_instance
 
-
+@method_decorator(can_edit_resource_instance, name="dispatch")
 class ResourceEditLogAPIView(View):
 
     def export(self, queryset):
