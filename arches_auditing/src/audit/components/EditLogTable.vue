@@ -238,4 +238,12 @@
         cursor: pointer;
     }
 
+    .resource-link {
+        color: blue;
+    }
+
+    .resource-link:hover {
+        text-decoration: underline;
+    }
+
 </style>
