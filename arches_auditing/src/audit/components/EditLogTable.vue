@@ -6,6 +6,8 @@
     import InputText from 'primevue/inputtext';
     import Select from 'primevue/select';
     import DatePicker from 'primevue/datepicker';
+    import IconField from 'primevue/iconfield';
+    import InputIcon from 'primevue/inputicon';
 
     import { formatTimestamp, isRowInspectable } from "../utils.ts";
 
@@ -60,37 +62,59 @@
                 </template>
 
                 <template #filter="{ filterModel, filterCallback }">
-                    <InputText 
-                    v-model="filterModel.value" 
-                    type="text" 
-                    @input="debouncedFilter(filterCallback)"
-                    placeholder="Search by resource ID..." 
-                    class="filter-box"
-                    />
+                    <IconField iconPosition="right">
+                        <InputText 
+                            v-model="filterModel.value" 
+                            type="text" 
+                            @input="debouncedFilter(filterCallback)"
+                            placeholder="Search by resource ID..." 
+                            class="filter-box"
+                            showClear
+                        />
+                        <InputIcon 
+                            v-if="filterModel.value" 
+                            class="pi pi-times clear-filter-icon" 
+                            @click="filterModel.value = null; filterCallback();"
+                        />
+                    </IconField>
                 </template>
             </Column>
 
             <Column field="resource_name" header="Resource Name" sortable filter :showFilterMenu="false">
                 <template #filter="{ filterModel, filterCallback }">
-                    <InputText 
-                        v-model="filterModel.value" 
-                        type="text" 
-                        @input="debouncedFilter(filterCallback)"
-                        placeholder="Search Resource Name..." 
-                        class="filter-box"
-                    />
+                    <IconField iconPosition="right">
+                        <InputText 
+                            v-model="filterModel.value" 
+                            type="text" 
+                            @input="debouncedFilter(filterCallback)"
+                            placeholder="Search Resource Name..." 
+                            class="filter-box"
+                        />
+                        <InputIcon 
+                            v-if="filterModel.value" 
+                            class="pi pi-times clear-filter-icon" 
+                            @click="filterModel.value = null; filterCallback();"
+                        />
+                    </IconField>
                 </template>
             </Column>
 
             <Column field="graph_name" header="Graph Name" sortable filter :showFilterMenu="false">
                 <template #filter="{ filterModel, filterCallback }">
-                    <InputText 
-                        v-model="filterModel.value" 
-                        type="text" 
-                        @input="debouncedFilter(filterCallback)"
-                        placeholder="Search Graph Name..." 
-                        class="filter-box"
-                    />
+                    <IconField iconPosition="right">
+                        <InputText 
+                            v-model="filterModel.value" 
+                            type="text" 
+                            @input="debouncedFilter(filterCallback)"
+                            placeholder="Search Graph Name..." 
+                            class="filter-box"
+                        />
+                        <InputIcon 
+                            v-if="filterModel.value" 
+                            class="pi pi-times clear-filter-icon" 
+                            @click="filterModel.value = null; filterCallback();"
+                        />
+                    </IconField>
                 </template>
             </Column>
 
@@ -118,13 +142,20 @@
 
             <Column field="user_username" header="User" sortable filter :showFilterMenu="false">
                 <template #filter="{ filterModel, filterCallback }">
-                    <InputText 
-                        v-model="filterModel.value" 
-                        type="text" 
-                        @input="debouncedFilter(filterCallback)"
-                        placeholder="Search User..." 
-                        class="filter-box"
-                    />
+                    <IconField iconPosition="right">
+                        <InputText 
+                            v-model="filterModel.value" 
+                            type="text" 
+                            @input="debouncedFilter(filterCallback)"
+                            placeholder="Search User..." 
+                            class="filter-box"
+                        />
+                        <InputIcon 
+                            v-if="filterModel.value" 
+                            class="pi pi-times clear-filter-icon" 
+                            @click="filterModel.value = null; filterCallback();"
+                        />
+                    </IconField>
                 </template>
             </Column>
 
@@ -145,13 +176,20 @@
 
             <Column field="card_name" header="Card Name" sortable filter :showFilterMenu="false">
                 <template #filter="{ filterModel, filterCallback }">
-                    <InputText 
-                        v-model="filterModel.value" 
-                        type="text" 
-                        @input="debouncedFilter(filterCallback)"
-                        placeholder="Search Card Name..." 
-                        class="filter-box"
-                    />
+                    <IconField iconPosition="right">
+                        <InputText 
+                            v-model="filterModel.value" 
+                            type="text" 
+                            @input="debouncedFilter(filterCallback)"
+                            placeholder="Search Card Name..." 
+                            class="filter-box"
+                        />
+                        <InputIcon 
+                            v-if="filterModel.value" 
+                            class="pi pi-times clear-filter-icon" 
+                            @click="filterModel.value = null; filterCallback();"
+                        />
+                    </IconField>
                 </template>
             </Column>
 
@@ -194,6 +232,10 @@
 
     .checkbox-container {
         text-align: center;
+    }
+
+    .clear-filter-icon {
+        cursor: pointer;
     }
 
 </style>
