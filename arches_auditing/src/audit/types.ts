@@ -1,3 +1,5 @@
+import type { DataTableFilterMetaData } from 'primevue/datatable';
+
 export interface EditLogEntry {
     editlogid: string;
     transactionid: string;
@@ -33,8 +35,6 @@ export interface FetchEditLogParams {
     dateTimeFromFilter?: string | null;
     dateTimeToFilter?: string | null;
 }
-
-import type { DataTableFilterMetaData } from 'primevue/datatable';
 
 export interface Filters {
     resourceinstanceid: { value: string | null; matchMode: string };
