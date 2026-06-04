@@ -8,6 +8,7 @@
     } from 'primevue/datatable';
 
     import Button from 'primevue/button';
+    import Select from 'primevue/select';
     import { FilterMatchMode } from '@primevue/core/api';
 
     import { debounce } from "./utils.ts";
@@ -188,6 +189,12 @@
         }
     };
 
+    function handleRowSizeChange(newSize: number) {
+        firstRow.value = 0;
+        rows.value = newSize;
+        loadEditLog();
+    }
+
     const handleExport = async () => {
 
         const dateRange = filters.value.timestamp.value;
@@ -249,6 +256,18 @@
                 :stat-cards-config="statCardsConfig"
             />
 
+            <div class="table-actions-header">
+                <div class="table-control-widget">
+                    <span class="row-selector-label">Rows per page:</span>
+                    <Select 
+                    :modelValue="rows"
+                    :options="[5, 10, 20, 50]"
+                    @update:modelValue="(val) => handleRowSizeChange(val)"
+                    class="row-selector-dropdown"
+                    />
+                </div>
+            </div>
+            
             <EditLogTable
                 :is-loading="isLoading"
                 :isGraphsLoading="isGraphsLoading"
@@ -264,13 +283,13 @@
                 v-model:firstRow="firstRow"
             />
 
-            <div class="table-actions-bar">
+            <div class="table-actions-footer">
                 <Button 
-                    raised
-                    size="large"
+                    size="small"
                     severity="secondary"
+                    variant="outlined"
                     class="export-csv-btn"
-                    @click=handleExport
+                    @click="handleExport"
                     >
                     <span>Export to CSV</span>
                     <i class="pi pi-download" style="font-size: 2rem"></i>
@@ -302,6 +321,7 @@
         box-sizing: border-box;
         margin: 0px;
         width: calc(100vw - 3%);
+        scrollbar-gutter: stable;
     }
 
     .dashboard-container {
@@ -309,16 +329,45 @@
         padding-bottom: 100px;
     }
 
-    .table-actions-bar{
+    .table-actions-header{
         display: flex;
-        justify-content: end;
-        margin-bottom: 15px;
+        align-items: center;
+        width: 100%;
+        justify-content: flex-start;
+        margin-bottom: 20px;
+        padding-left: 12px;
+    }
+
+    .table-actions-footer{
+        display: flex;
+        align-items: center;
+        width: 100%;
+        justify-content: flex-end;
+        margin-top: 20px;
+    }
+
+    .table-control-widget {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .row-selector-label {
+        font-size: 1.5rem;
+        color: #64748b;
+        font-weight: 500;
+    }
+
+    .row-selector-dropdown :deep(.p-select-label) {
+        padding: 6px 12px;
+        font-size: 1.5rem;
     }
 
     .export-csv-btn {
-        padding: 12px 24px;
-        font-size: 1.6rem;
-        margin-top: 20px;
+        padding: 6px 12px;
+        font-size: 1.5rem;
+        background-color: #f7fafd;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
 </style>

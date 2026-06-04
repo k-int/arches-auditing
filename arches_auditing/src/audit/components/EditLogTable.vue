@@ -12,7 +12,7 @@
     import { formatTimestamp, isRowInspectable } from "../utils.ts";
 
     import { actionOptions } from "../constants.ts";
-    import { EditLogEntry, Filters, GraphObject } from "../types.ts";
+    import { EditLogEntry, Filters } from "../types.ts";
 
 
     defineProps<{
@@ -32,10 +32,13 @@
     const filters = defineModel<Filters>('filters', { required: true });
     const firstRow = defineModel<number>('firstRow', { required: true });
 
+    const emit = defineEmits(['update:rows', 'update:firstRow', 'page-change']);
+
 </script>
 
 <template>
     <div class="edit-log-table-container">
+                
         <DataTable
             lazy
             filterDisplay="row"
@@ -216,6 +219,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-wrap: wrap;
     }
 
     .edit-log-table {
