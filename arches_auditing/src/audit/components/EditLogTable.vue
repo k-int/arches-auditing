@@ -39,13 +39,8 @@
 
 <template>
     <div class="edit-log-table-container">
-
-        <Skeleton v-if="isLoading"
-            width="100%" 
-            height="342px" 
-        />
-                
-        <DataTable v-else
+            
+        <DataTable
             lazy
             filterDisplay="row"
             v-model:filters="filters"
@@ -54,6 +49,7 @@
             size="large"
             striped-rows
             removableSort
+            :loading="isLoading" 
             :value="edits" 
             :paginator="true" 
             :rows="rows"

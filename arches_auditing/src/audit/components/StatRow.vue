@@ -10,35 +10,28 @@
 </script>
 
 <template>
-
+        
     <div class="stat-row">
 
-        <template v-if="isLoading">
-            <Skeleton 
-                v-for="(card, index) in statCardsConfig" 
-                :key="'skeleton-' + index" 
-                height="150px" 
-                width="130px"
-            />
-        </template>
+        <Card 
+            v-for="(card, index) in statCardsConfig" 
+            :key="'card-' + index" 
+            class="stat-card"
+        >
+            <template #title>
+                <span class="stat-title">{{ card.title }}</span>
+            </template>
 
-        <template v-else>
-            <Card 
-                v-for="(card, index) in statCardsConfig" 
-                :key="'card-' + index" 
-                class="stat-card"
-            >
-                <template #title>
-                    <span class="stat-title">{{ card.title }}</span>
-                </template>
+            <template #content>
+                <p class="stat-content">
+                    {{ card.value }}
+                </p>
+            </template>
+        </Card>
 
-                <template #content>
-                    <p class="stat-content">
-                        {{ card.value }}
-                    </p>
-                </template>
-            </Card>
-        </template>
+        <div v-if="isLoading" class="stat-row-mask" aria-hidden="true">
+            <i class="pi pi-spin pi-spinner stat-row-mask-spinner"></i>
+        </div>
 
     </div>
 
@@ -50,13 +43,13 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        /* border: 1px solid blue; */
         margin-top: 75px;
         margin-bottom: 40px;
         height: 130px;
         width: 100%;
+        position: relative;
+        width: 100%;
     }
-    
     .stat-row-tiles {
         justify-content: center;
         gap: 125px;
@@ -78,5 +71,25 @@
 
     .stat-content {
         font-size: 4rem;
+    }
+
+    .stat-row-mask {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2;
+        border-radius: 6px;
+    }
+
+    .stat-row-mask-spinner {
+        font-size: 1.9rem;
+        font-weight: 50;
+        color: #E8E8E8;
     }
 </style>
