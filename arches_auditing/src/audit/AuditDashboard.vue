@@ -320,7 +320,7 @@
         font-size: 1.5rem;
         box-sizing: border-box;
         margin: 0px;
-        width: calc(100vw - 3%);
+        width: calc(100vw - 50px);
         scrollbar-gutter: stable;
     }
 

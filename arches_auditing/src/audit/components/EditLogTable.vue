@@ -8,6 +8,7 @@
     import DatePicker from 'primevue/datepicker';
     import IconField from 'primevue/iconfield';
     import InputIcon from 'primevue/inputicon';
+    import Skeleton from 'primevue/skeleton';
 
     import { formatTimestamp, isRowInspectable } from "../utils.ts";
 
@@ -38,8 +39,13 @@
 
 <template>
     <div class="edit-log-table-container">
+
+        <Skeleton v-if="isLoading"
+            width="100%" 
+            height="342px" 
+        />
                 
-        <DataTable
+        <DataTable v-else
             lazy
             filterDisplay="row"
             v-model:filters="filters"
@@ -49,7 +55,6 @@
             striped-rows
             removableSort
             :value="edits" 
-            :loading="isLoading" 
             :paginator="true" 
             :rows="rows"
             :totalRecords="totalRecords"
