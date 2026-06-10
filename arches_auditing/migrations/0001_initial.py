@@ -7,8 +7,8 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ('models', '11499_add_editlog_resourceinstance_idx'),
     ]
-    # TODO add arches version dependency
 
     forward = """
         INSERT INTO plugins (
