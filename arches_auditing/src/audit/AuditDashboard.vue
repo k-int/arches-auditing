@@ -23,6 +23,7 @@
     import EditLogTable from "./components/EditLogTable.vue";
 
     const isLoading = ref(true);
+    const showExportWarning = ref(false);
 
     const edits = ref<EditLogEntry[]>([])
     const actionCounts = ref<ActionCounts>({});
@@ -285,15 +286,17 @@
 
             <div class="table-actions-footer">
                 <Button 
+                    v-tooltip.top="{
+                        value: 'Export is currently capped at 2000 edits',
+                    }"
+                    label="Export to CSV"
+                    icon="pi pi-download"
                     size="small"
                     severity="secondary"
                     variant="outlined"
                     class="export-csv-btn"
                     @click="handleExport"
-                    >
-                    <span>Export to CSV</span>
-                    <i class="pi pi-download" style="font-size: 2rem"></i>
-                </Button>
+                />
             </div>
 
             <EditLogComparison  v-if="selectedEditLogOldValue || selectedEditLogNewValue"
