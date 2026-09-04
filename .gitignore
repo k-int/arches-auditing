@@ -7,4 +7,4 @@ webpack-stats.json
 *.egg-info
 .DS_STORE
 CACHE
-frontend_configuration/
+arches_auditing/settings_local.py
