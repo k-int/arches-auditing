@@ -1,0 +1,189 @@
+{
+    "graph": [
+        {
+            "author": " ",
+            "cards": [
+                {
+                    "active": true,
+                    "cardid": "c43d495f-4bf2-4ccb-919d-a91bc711bac4",
+                    "component_id": "f05e4d3a-53c1-11e8-b0ea-784f435179ea",
+                    "config": null,
+                    "constraints": [],
+                    "cssclass": null,
+                    "description": null,
+                    "graph_id": "500a5aa7-0bbb-4df8-8c78-e361c8faab35",
+                    "helpenabled": false,
+                    "helptext": {
+                        "en": null
+                    },
+                    "helptitle": {
+                        "en": null
+                    },
+                    "instructions": {
+                        "en": null
+                    },
+                    "is_editable": true,
+                    "name": {
+                        "en": "Test nodegroup 1"
+                    },
+                    "nodegroup_id": "58ea0324-6592-11f1-a941-95721ea55e2b",
+                    "sortorder": null,
+                    "visible": true
+                }
+            ],
+            "cards_x_nodes_x_widgets": [],
+            "color": null,
+            "config": {},
+            "deploymentdate": null,
+            "deploymentfile": null,
+            "description": {
+                "en": ""
+            },
+            "edges": [
+                {
+                    "description": null,
+                    "domainnode_id": "4c2e3042-6592-11f1-a941-95721ea55e2b",
+                    "edgeid": "817ee575-0ec9-4247-bd0b-71307caa91d0",
+                    "graph_id": "500a5aa7-0bbb-4df8-8c78-e361c8faab35",
+                    "name": null,
+                    "ontologyproperty": null,
+                    "rangenode_id": "58ea0324-6592-11f1-a941-95721ea55e2b"
+                },
+                {
+                    "description": null,
+                    "domainnode_id": "58ea0324-6592-11f1-a941-95721ea55e2b",
+                    "edgeid": "8c3f2b17-854e-42e6-8bee-a9a1ce26e4ea",
+                    "graph_id": "500a5aa7-0bbb-4df8-8c78-e361c8faab35",
+                    "name": null,
+                    "ontologyproperty": null,
+                    "rangenode_id": "1e526804-6593-11f1-a941-95721ea55e2b"
+                }
+            ],
+            "functions_x_graphs": [],
+            "graphid": "500a5aa7-0bbb-4df8-8c78-e361c8faab35",
+            "iconclass": "",
+            "is_editable": true,
+            "isresource": true,
+            "jsonldcontext": null,
+            "name": {
+                "en": "Test resource model"
+            },
+            "nodegroups": [
+                {
+                    "cardinality": "1",
+                    "legacygroupid": null,
+                    "nodegroupid": "58ea0324-6592-11f1-a941-95721ea55e2b",
+                    "parentnodegroup_id": null
+                }
+            ],
+            "nodes": [
+                {
+                    "alias": "test_string_node",
+                    "config": {
+                        "en": ""
+                    },
+                    "datatype": "semantic",
+                    "description": null,
+                    "exportable": false,
+                    "fieldname": null,
+                    "graph_id": "500a5aa7-0bbb-4df8-8c78-e361c8faab35",
+                    "hascustomalias": false,
+                    "is_collector": false,
+                    "isrequired": false,
+                    "issearchable": true,
+                    "istopnode": false,
+                    "name": "Test string node",
+                    "nodegroup_id": "58ea0324-6592-11f1-a941-95721ea55e2b",
+                    "nodeid": "1e526804-6593-11f1-a941-95721ea55e2b",
+                    "ontologyclass": null,
+                    "parentproperty": null,
+                    "sortorder": 0,
+                    "sourcebranchpublication_id": null
+                },
+                {
+                    "alias": null,
+                    "config": {
+                        "en": ""
+                    },
+                    "datatype": "semantic",
+                    "description": "",
+                    "exportable": false,
+                    "fieldname": null,
+                    "graph_id": "500a5aa7-0bbb-4df8-8c78-e361c8faab35",
+                    "hascustomalias": false,
+                    "is_collector": false,
+                    "isrequired": false,
+                    "issearchable": true,
+                    "istopnode": true,
+                    "name": "Test resource model",
+                    "nodegroup_id": null,
+                    "nodeid": "4c2e3042-6592-11f1-a941-95721ea55e2b",
+                    "ontologyclass": null,
+                    "parentproperty": "",
+                    "sortorder": 0,
+                    "sourcebranchpublication_id": null
+                },
+                {
+                    "alias": "test_nodegroup_1",
+                    "config": {
+                        "en": ""
+                    },
+                    "datatype": "semantic",
+                    "description": null,
+                    "exportable": false,
+                    "fieldname": null,
+                    "graph_id": "500a5aa7-0bbb-4df8-8c78-e361c8faab35",
+                    "hascustomalias": false,
+                    "is_collector": true,
+                    "isrequired": false,
+                    "issearchable": true,
+                    "istopnode": false,
+                    "name": "Test nodegroup 1",
+                    "nodegroup_id": "58ea0324-6592-11f1-a941-95721ea55e2b",
+                    "nodeid": "58ea0324-6592-11f1-a941-95721ea55e2b",
+                    "ontologyclass": null,
+                    "parentproperty": null,
+                    "sortorder": 0,
+                    "sourcebranchpublication_id": null
+                }
+            ],
+            "ontology_id": null,
+            "publication": {
+                "graph_id": "500a5aa7-0bbb-4df8-8c78-e361c8faab35",
+                "notes": null,
+                "publicationid": "519e5d94-6593-11f1-a941-95721ea55e2b",
+                "published_time": "2026-06-11T07:44:42.912"
+            },
+            "relatable_resource_model_ids": [],
+            "resource_2_resource_constraints": [],
+            "root": {
+                "alias": null,
+                "config": {
+                    "en": ""
+                },
+                "datatype": "semantic",
+                "description": "",
+                "exportable": false,
+                "fieldname": null,
+                "graph_id": "500a5aa7-0bbb-4df8-8c78-e361c8faab35",
+                "hascustomalias": false,
+                "is_collector": false,
+                "isrequired": false,
+                "issearchable": true,
+                "istopnode": true,
+                "name": "Test resource model",
+                "nodegroup_id": null,
+                "nodeid": "4c2e3042-6592-11f1-a941-95721ea55e2b",
+                "ontologyclass": null,
+                "sortorder": 0,
+                "sourcebranchpublication_id": null
+            },
+            "slug": null,
+            "subtitle": {
+                "en": ""
+            },
+            "template_id": "50000000-0000-0000-0000-000000000001",
+            "version": ""
+        }
+    ]
+    }
