@@ -191,7 +191,7 @@ class ResourceEditLogAPIView(View):
             {
                 "editlogid": str(edit.editlogid),
                 "resourceinstanceid": str(edit.resourceinstanceid),
-                "resource_name": edit.resource_name if (edit.resource_name and edit.resource_name != "Undefined") else "None",
+                "resource_name": edit.resource_name if (edit.resource_name and edit.resource_name != "Undefined") else None,
                 "graph_name": edit.graph_name,
                 "transactionid": (
                     str(edit.transactionid) if edit.transactionid else None
