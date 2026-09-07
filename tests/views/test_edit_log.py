@@ -96,10 +96,6 @@ class EditLogGetViewTests(TestCase):
             resourceinstanceid="e6ca165e-a7bc-4867-803a-c71f83dc9bd6",
         )
 
-        resource.index()
-        import time
-        time.sleep(1)
-
         resourceinstanceid = str(resource.resourceinstanceid)
 
         resource.delete()
@@ -146,4 +142,5 @@ class EditLogGetViewTests(TestCase):
         self.assertIsNone(edit["nodegroupid"])
         self.assertIsNone(edit["tileinstanceid"])
         self.assertIsNone(edit["user_username"])
+
 
