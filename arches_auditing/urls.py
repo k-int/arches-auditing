@@ -1,4 +1,4 @@
-from django.urls import re_path, path
+from django.urls import include, path
 from arches_auditing.views.api.edit_log import ResourceEditLogAPIView
 
 urlpatterns = [
@@ -8,3 +8,5 @@ urlpatterns = [
         name="audit-app-edit-log",
     ),
 ]
+
+urlpatterns.append(path('', include('arches.urls')))

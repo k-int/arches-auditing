@@ -89,13 +89,9 @@ class EditLogGetViewTests(TestCase):
 
         tile_id = self._create_basic_edit_log()
 
-        factory = RequestFactory()
-        request = factory.get(reverse("audit-app-edit-log"))
-        request.user = self.user
-
-        view_function = ResourceEditLogAPIView.as_view()
-        response = view_function(request)
-        response_data = json.loads(response.content.decode("utf-8"))
+        self.client.force_login(self.user)
+        response = self.client.get(reverse("audit-app-edit-log"))
+        response_data = response.json()
 
         #### Test counts data
 
