@@ -62,7 +62,7 @@ ROOT_HOSTCONF = "arches_auditing.hosts"
 DEFAULT_HOST = "arches_auditing"
 
 # Modify this line as needed for your project to connect to elasticsearch with a password that you generate
-ELASTICSEARCH_CONNECTION_OPTIONS = {"request_timeout": 30, "verify_certs": False, "basic_auth": ("elastic", "WAgpz3X0zF2xh7j*_xI+")}
+ELASTICSEARCH_CONNECTION_OPTIONS = {"request_timeout": 30, "verify_certs": False, "basic_auth": ("elastic", "E1asticSearchforArche5")}
 
 # If you need to connect to Elasticsearch via an API key instead of username/password, use the syntax below:
 # ELASTICSEARCH_CONNECTION_OPTIONS = {"request_timeout": 30, "verify_certs": False, "api_key": "<ENCODED_API_KEY>"}
@@ -288,7 +288,7 @@ TILE_CACHE_TIMEOUT = 600 #seconds
 CLUSTER_DISTANCE_MAX = 5000 #meters
 GRAPH_MODEL_CACHE_TIMEOUT = None
 
-OAUTH_CLIENT_ID = 'NSaJwM82cYVnuhZQPbCFFKvRQLju0Yf7KkO14nN6'  #'9JCibwrWQ4hwuGn5fu2u1oRZSs9V6gK8Vu8hpRC4'
+OAUTH_CLIENT_ID = ''  #'9JCibwrWQ4hwuGn5fu2u1oRZSs9V6gK8Vu8hpRC4'
 
 APP_TITLE = 'Arches | Heritage Data Management'
 COPYRIGHT_TEXT = 'All Rights Reserved.'
